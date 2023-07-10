@@ -181,7 +181,7 @@ struct UpdateDownloadingView: View {
     
     func downloadUpdateAndInstall() async throws {
         let owner = "singlekeycap"
-        let repo = "Dopamine"
+        let repo = "Xinam1ne"
         
         // Get the releases
         let releasesURL = URL(string: "https://api.github.com/repos/\(owner)/\(repo)/releases")!

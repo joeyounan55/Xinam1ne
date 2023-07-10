@@ -36,7 +36,7 @@ struct AboutView: View {
         VStack {
             VStack {
                 Button(action: {
-                    openURL(URL(string: "https://github.com/singlekeycap/Dopamine")!)
+                    openURL(URL(string: "https://github.com/singlekeycap/Xinam1ne")!)
                 }) {
                     HStack {
                         Spacer()
@@ -52,7 +52,7 @@ struct AboutView: View {
                     .padding(.horizontal, 32)
                 }
                 Button(action: {
-                    openURL(URL(string: "https://github.com/singlekeycap/Dopamine/LICENSE.md")!)
+                    openURL(URL(string: "https://github.com/singlekeycap/Xinam1ne/LICENSE.md")!)
                 }) {
                     HStack {
                         Spacer()
