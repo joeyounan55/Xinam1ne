@@ -17,7 +17,6 @@ struct AboutView: View {
     
     let contributors = [
         ("SingleKeycap", "http://github.com/singlekeycap"),
-        ("Sudo", "http://twitter.com/sudo1469"),
         ("opa334", "http://github.com/opa334"),
         ("Évelyne", "http://github.com/evelyneee"),
         ("sourcelocation", "http://github.com/sourcelocation"),
