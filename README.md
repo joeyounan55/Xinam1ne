@@ -8,9 +8,7 @@ Official website / download: https://ipa.cypwn.xyz/#ts_tab
 
 ### Why Xinam1ne instead of Dopamine?
 
-Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask me what changes with Xinam1ne and I always have to type out the same old stuff, so have a list here:
-
-Xinam1ne includes:
+Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask me what changes with Xinam1ne and I always have to type out the same old stuff, so have a list of what Xinam1ne has that Dopamine doesn't:
 - Xina-like symlinks for older rootful tweaks which are created upon jailbreaking (so DRM for said tweaks can load w/o issue in rare cases)
 - Cypwn-oriented colors
 - A toggle to stay on stock Dopamine vs. Xinam1ne w/ symlinks
