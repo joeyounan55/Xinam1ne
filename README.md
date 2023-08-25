@@ -14,3 +14,5 @@ Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask
 - A toggle to stay on stock Dopamine vs. Xinam1ne w/ symlinks
 
 That's all folks!
+
+<img src="https://tenor.com/view/porky-pig-looney-tunes-thats-all-folks-bye-gif-5803466" width="320" />
