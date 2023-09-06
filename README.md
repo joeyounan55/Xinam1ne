@@ -4,7 +4,7 @@
 
 Rootless arm64e jailbreak for iOS 15.0 - 15.4.1.
 
-Official website / download: https://ipa.cypwn.xyz/#ts_tab
+Official website / download: https://xina.cypwn.xyz
 
 ### Why Xinam1ne instead of Dopamine?
 
