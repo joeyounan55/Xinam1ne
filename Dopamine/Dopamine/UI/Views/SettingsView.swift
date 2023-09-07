@@ -57,8 +57,9 @@ struct SettingsView: View {
                                 }
                             if !isJailbroken() {
                                 Toggle("Settings_Verbose_Logs", isOn: $verboseLogs)
-                                Toggle("Settings_Should_Xinamine", isOn: $shouldXinamine)
                             }
+                            Toggle("Settings_Should_Xinamine", isOn: $shouldXinamine)
+                                .disabled(isJailbroken())
                         }
                         if isBootstrapped() {
                             VStack {
