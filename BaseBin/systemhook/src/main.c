@@ -5,6 +5,7 @@
 #include <sys/sysctl.h>
 #include <sys/stat.h>
 #include <paths.h>
+#include <util.h>
 #include "sandbox.h"
 extern char **environ;
 
@@ -122,10 +123,20 @@ int posix_spawnp_hook(pid_t *restrict pid, const char *restrict file,
 
 int execve_hook(const char *path, char *const argv[], char *const envp[])
 {
-	posix_spawnattr_t attr;
+	posix_spawnattr_t attr = NULL;
 	posix_spawnattr_init(&attr);
 	posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETEXEC);
-	return spawn_hook_common(NULL, path, NULL, &attr, argv, envp, (void *)posix_spawn);
+	int result = spawn_hook_common(NULL, path, NULL, &attr, argv, envp, (void *)posix_spawn);
+	if (attr) {
+		posix_spawnattr_destroy(&attr);
+	}
+	
+	if(result != 0) { // posix_spawn will return errno and restore errno if it fails
+		errno = result; // so we need to set errno by ourself
+		return -1;
+	}
+
+	return result;
 }
 
 int execle_hook(const char *path, const char *arg0, ... /*, (char *)0, char *const envp[] */)
@@ -357,6 +368,18 @@ pid_t vfork_hook(void)
 	return vfork();
 }
 
+pid_t forkpty_hook(int *amaster, char *name, struct termios *termp, struct winsize *winp)
+{
+	loadForkFix();
+	return forkpty(amaster, name, termp, winp);
+}
+
+int daemon_hook(int __nochdir, int __noclose)
+{
+	loadForkFix();
+	return daemon(__nochdir, __noclose);
+}
+
 bool shouldEnableTweaks(void)
 {
 	if (access(JB_ROOT_PATH("/basebin/.safe_mode"), F_OK) == 0) {
@@ -467,3 +490,5 @@ DYLD_INTERPOSE(sandbox_init_with_extensions_hook, sandbox_init_with_extensions)
 DYLD_INTERPOSE(ptrace_hook, ptrace)
 DYLD_INTERPOSE(fork_hook, fork)
 DYLD_INTERPOSE(vfork_hook, vfork)
+DYLD_INTERPOSE(forkpty_hook, forkpty)
+DYLD_INTERPOSE(daemon_hook, daemon)
