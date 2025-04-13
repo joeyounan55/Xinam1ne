@@ -3,12 +3,12 @@ name: "Dopamine: build and upload"
 on:
   push:
     branches:
-      - '*'
+      - master
     paths-ignore:
       - ".gitignore"
   pull_request:
     branches:
-      - '*'
+      - master
     paths-ignore:
       - ".gitignore"
   workflow_dispatch:
@@ -25,24 +25,17 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-13
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.6.0
-        with:
-          submodules: recursive
+        uses: actions/checkout@v3
 
       - name: Install Procursus
-        uses: dhinakg/procursus-action@4526d5e64410da26bea8073926c0bf8e779293f1
+        uses: dhinakg/procursus-action@main
         with:
           packages: ldid findutils sed coreutils make
 
-      - name: Install better GNU Make
-        run: |
-          brew install make
-          echo "PATH=$(brew --prefix make)/libexec/gnubin:$PATH" >> $GITHUB_ENV
-
-      - name: Install THEOS
+      - name: Install THEOS (without SDKs)
         run: |
           set -x
           export BASEDIR="$(pwd)"
@@ -51,10 +44,6 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos >> install-theos.sh
           gsed -E "/^\s*get_theos\s*$/,+1 s/^(\s*)(get_sdks)\s*$/\1mkdir -p \${THEOS}\/sdks\n\1touch \${THEOS}\/sdks\/sdk\n\1\2/g" -i install-theos.sh
           bash install-theos.sh
-          curl -L https://github.com/theos/sdks/releases/latest/download/iPhoneOS16.5.sdk.tar.xz --output $THEOS/sdks/iPhoneOS16.5.sdk.tar.xz
-          gunzip $THEOS/sdks/iPhoneOS16.5.sdk.tar.xz
-          tar -xf $THEOS/sdks/iPhoneOS16.5.sdk.tar -C $THEOS/sdks
-          rm $THEOS/sdks/iPhoneOS16.5.sdk.tar
           cd $BASEDIR
 
       - name: Build and Install trustcache
@@ -62,9 +51,7 @@ jobs:
           set -x
           git clone https://github.com/CRKatri/trustcache
           cd trustcache
-          export CFLAGS="$CFLAGS -I$(brew --prefix openssl)/include -arch arm64"
-          export LDFLAGS="$LDFLAGS -L$(brew --prefix openssl)/lib -arch arm64"
-          gmake -j$(sysctl -n hw.logicalcpu) OPENSSL=1
+          gmake -j$(sysctl -n hw.physicalcpu) OPENSSL=1
           sudo cp trustcache /opt/procursus/bin/
 
       - name: Set Environment Variables
@@ -77,27 +64,26 @@ jobs:
           echo "ctimestamp=${TS}" >> $GITHUB_ENV
           echo "shorthash=${SHASH}" >> $GITHUB_ENV
 
-      - name: Install libarchive
-        run: |
-          brew install libarchive
-
-      - name: Download Bootstraps
-        run: |
-          set -x
-          cd Application/Dopamine/Resources
-          ./download_bootstraps.sh
-
       - name: Build
         run: |
           set -x
+          sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
           export BASEDIR="$(pwd)"
           export THEOS="${BASEDIR}/theos"
-          gmake -j$(sysctl -n hw.logicalcpu) NIGHTLY=1
+          gmake -j$(sysctl -n hw.physicalcpu)
+          cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
+          cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_Latest.tipa
 
-      - name: Upload Artifact
+      - name: Upload Latest Artifact
         id: dopamine-latest-upload
         uses: actions/upload-artifact@main
         with:
-          name: Dopamine
-          path: |
-            ${{ github.workspace }}/Application/Dopamine.ipa
+          name: Dopamine_Latest
+          path: Dopamine/Dopamine_Latest.tipa
+
+      - name: Upload Hashed Artifact
+        id: dopamine-hashed-upload
+        uses: actions/upload-artifact@main
+        with:
+          name: Dopamine_${{ env.shorthash }}_${{ env.ctime }}
+          path: Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
