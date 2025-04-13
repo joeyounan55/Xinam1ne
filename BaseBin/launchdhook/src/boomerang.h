@@ -1,1 +1,2 @@
-void boomerang_userspaceRebootIncoming();
+int boomerang_recoverPrimitives(bool firstRetrieval, bool shouldEndBoomerang);
+void boomerang_stashPrimitives(void);

@@ -1,8 +1,21 @@
-#import <Foundation/Foundation.h>
-int getCSBlobOffsetAndSize(FILE* machoFile, uint32_t* outOffset, uint32_t* outSize);
+#ifndef SIGNATURES_H
+#define SIGNATURES_H
 
-NSString *processRpaths(NSString *path, NSString *tokenName, NSArray *rpaths);
-NSString *resolveLoadPath(NSString *loadPath, NSString *machoPath, NSString *sourceExecutablePath, NSArray *rpaths);
-int evaluateSignature(NSURL* fileURL, NSData **cdHashOut, BOOL *isAdhocSignedOut);
-BOOL isCdHashInTrustCache(NSData *cdHash);
-int loadEmbeddedSignature(FILE *file);
+#include <choma/CodeDirectory.h>
+
+typedef enum {
+	SIGNATURE_SOURCE_FILE,
+	SIGNATURE_SOURCE_PROC,
+} signature_source_t;
+
+struct siginfo {
+	signature_source_t source;
+	fsignatures_t signature;
+};
+
+typedef uint8_t cdhash_t[CS_CDHASH_LEN];
+
+bool code_signature_calculate_adhoc_cdhash(CS_SuperBlob *superblob, cdhash_t cdhashOut);
+void file_collect_untrusted_cdhashes(int fd, cdhash_t **cdhashesOut, uint32_t *cdhashCountOut);
+void file_collect_untrusted_cdhashes_by_path(const char *path, cdhash_t **cdhashesOut, uint32_t *cdhashCountOut);
+#endif

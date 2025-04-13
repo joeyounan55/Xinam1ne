@@ -14,8 +14,7 @@ public class iDownloadKRW: KRWHandler {
     }
     
     public func getInfo() throws -> (kernelBase: UInt64, slide: UInt64) {
-        let slide = bootInfo_getUInt64("kernelslide")
-        return (kernelBase: 0xFFFFFFF007004000 + slide, slide: slide)
+        return (kernelBase: c_getkbase(), slide: c_getkslide())
     }
     
     public func resolveAddress(forName: String) throws -> KRWAddress? {
@@ -72,16 +71,12 @@ public class iDownloadKRW: KRWHandler {
     }
     
     public func kalloc(size: UInt) throws -> UInt64 {
-        let kallocAddr = bootInfo_getSlidUInt64("kalloc_data_external")
-        
-        for _ in 0..<1024 {
-            let res = try kcall(func: KRWAddress(address: kallocAddr, options: []), a1: UInt64(size), a2: 1, a3: 0, a4: 0, a5: 0, a6: 0, a7: 0, a8: 0)
-            if res != 0 {
-                return res
-            }
+        var kallocAddr: UInt64 = 0
+        let r = c_kalloc(&kallocAddr, UInt64(size))
+        if r != 0 {
+            throw KRWError.customError(description: "kalloc_data_external failed to allocate!")
         }
-        
-        throw KRWError.customError(description: "kalloc_data_external failed to allocate!")
+        return kallocAddr
     }
     
     public func kfree(address: UInt64) throws {
@@ -89,6 +84,10 @@ public class iDownloadKRW: KRWHandler {
     }
     
     public func kcall(func: KRWAddress, a1: UInt64, a2: UInt64, a3: UInt64, a4: UInt64, a5: UInt64, a6: UInt64, a7: UInt64, a8: UInt64) throws -> UInt64 {
+        guard c_kcall_supported() else {
+            throw KRWError.customError(description: "Kcall is not supported!")
+        }
+        
         guard !`func`.options.contains(.physical) else {
             // Nope, can't do that without disabling MMU (hardware prevents that)
             throw KRWError.customError(description: "Physical kcall not supported!")
@@ -114,8 +113,12 @@ public class iDownloadKRW: KRWHandler {
         
         var result: UInt64 = 0
         
-        return data.withUnsafeBytes { (p: UnsafePointer<UInt64>) in
-            return jbdKcall(`func`.address, 8, p)
+        return try data.withUnsafeBytes { (p: UnsafePointer<UInt64>) in
+            let r = c_kcall(&result, `func`.address, 8, p)
+            if r != 0 {
+                throw KRWError.customError(description: "Kcall did not succeed!")
+            }
+            return result
         }
     }
 }

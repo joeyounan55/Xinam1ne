@@ -1,159 +1,115 @@
-"Bootstrapping" = "Bootstrapping";
-
-"Button_Cancel" = "Hủy";
-
-"Button_Hide_Jailbreak" = "Ẩn Jailbreak";
-
-"Button_Hide_Logs_Title" = "Ẩn tệp Log";
-
-"Button_Jailbreak_Title" = "Jailbreak";
-
-"Button_Remove_Jailbreak" = "Xóa Jailbreak";
-
-"Button_Set_Mobile_Password" = "Đặt mật khẩu mobile";
-
-"Popup_Change_Mobile_Password_Message" = "Đặt mật khẩu root cho thiết bị, mật khẩu này cũng có thể được sử dụng để truy cập root bằng sudo. Nếu bạn muốn đặt mật khẩu root, bạn có thể dùng shell và sử dụng \"sudo passwd root\"";
-
-"Button_Reinstall_Package_Managers" = "Cài đặt lại các trình quản lý gói";
-
-"Button_Set" = "Đặt";
-
-"Button_Show_Logs_Title" = "Hiện tệp Log";
-
-"Button_Unhide_Jailbreak" = "Hiện Jailbreak";
-
-"Button_Update" = "Cập nhật";
-
-"Button_Update_Available" = "Có bản cập nhật mới";
-
-"Button_Update_Environment" = "Cập nhật \"Môi trường\"";
-
-"Bypassing PAC" = "Đang bypass PAC";
-
-"Bypassing PPL" = "Đang bypass PPL";
-
-"Changelog_Unavailable_Text" = "Không có Log thay đổi";
-
-"Context_Menu_Copy_To_Clipboard" = "Chép vào bộ nhớ tạm";
-
-"Credits_Button_Discord" = "Discord";
-
-"Credits_Button_License" = "Giấy phép";
-
-"Credits_Button_Source_Code" = "Mã nguồn";
-
-"Credits_Footer_Dopamine_Version %@\nOS:%@" = "Dopamine bản %@\n%@";
-
-"Credits_Header_Special_Thanks" = "Đặc biệt cảm ơn:";
-
 "Credits_Made_By" = "Được tạo bởi opa334, évelyne";
 
-"Credits_Made_By_Subheadline" = "UI bởi sourcelocation\nLogo và icon bởi xerus";
+// Log
+"Status_Title_Jailbreaking" = "Đang Jailbreak";
+"Log_Error" = "Không thành công";
 
-"Finalizing Bootstrap" = "Đang hoàn thiện Bootstrap";
+// Jailbreak Button
+"Button_Jailbreak_Title" = "Jailbreak";
+"Status_Title_Jailbroken" = "Đã Jailbreak";
+"Unsupported" = "Không hỗ trợ";
 
-"Gaining r/w" = "Thu được quyền r/w";
-
-"Hint_Hide_Jailbreak" = "\"Ẩn Jailbreak\" sẽ tạm thời xóa các tệp tin liên quan đến Jailbreak cho đến khi bạn Jailbreak lại";
-
-"Hint_Hide_Jailbreak_Jailbroken" = "\"Ẩn Jailbreak\” vô hiệu hóa một phần bẻ khóa và nhằm mục đích tránh phát hiện Jailbreak. Tuy nhiên, nó không hoàn toàn hiệu quả và hoàn toàn ẩn jailbreak.";
-
-"Initializing Environment" = "Khởi tạo \"Môi trường\"";
-
-"Initializing System Hook" = "Khởi tạo System Hook";
-
-"Jailbreak_Done" = "Thành công!";
-
-"Launching kexploitd" = "Đang chạy kexploitd";
-
-"Enabling Wi-Fi" = "Đang bật Wi-Fi";
-
-"Disabling Wi-Fi" = "Đang tắt Wi-Fi";
-
-"Launching oobPCI" = "Đang chạy oobPCI";
-
-"Loading Basebin Trustcache" = "Đang tải Basebin Trustcache";
-
+// Action Menu
+"Menu_Settings_Title" = "Cài đặt";
+"Menu_Restart_SpringBoard_Title" = "Khởi động lại SpringBoard";
+"Menu_Reboot_Userspace_Title" = "Khởi động lại Userspace";
 "Menu_Credits_Title" = "Tác giả";
 
-"Menu_Settings_Title" = "Cài đặt";
+// Updating
+"Button_Update" = "Cập nhật";
+"Button_Update_Available" = "Có bản cập nhật mới";
+"Button_Update_Environment" = "Cập nhật môi trường Jailbreak";
 
-"Menu_Reboot_Userspace_Title" = "Khởi động lại Userspace";
-
-"Menu_Restart_SpringBoard_Title" = "Khởi động lại SpringBoard";
-
-"Settings_iDownload" = "iDownload (nhà phát triển)";
-
-"Settings_Tweak_Injection" = "Tweak Injection";
-
-"Settings_Verbose_Logs" = "Log Verbose";
-
-"Settings_Should_Xinamine" = "Kích hoạt Xinamine";
-
-"Patchfinding" = "Đang tìm bản vá";
-
-"PM_Reinstall_Done_Text" = "Các trình quản lý gói đã chọn đã được cài đặt lại";
-
-"Rebuilding TrustCache" = "Đang build lại TrustCache";
-
-"Refreshing Icon Cache" = "Đang làm mới bộ nhớ đệm icon";
-
-"Settings_Footer_Device_Bootstrapped" = "Thiết bị đã được bootstrap";
-
-"Settings_Footer_Device_Not_Bootstrapped" = "Thiết bị chưa được bootstrap";
-
-"Starting jailbreakd" = "Đang chạy jailbreakd";
-
-"Starting Launch Daemons" = "Đang chạy các Daemons";
-
-"Status_Title_Jailbreaking" = "Đang Jailbreak";
-
-"Status_Title_Jailbroken" = "Đã Jailbreak";
-
-"Status_Title_Select_Package_Managers" = "Chọn trình quản lý gói";
-
-"Status_Title_Unsuccessful" = "Không thành công";
-
-"Success_Rate %@%% (%lld/%lld)" = "Tỉ lệ thành công: %@%% (%lld/%lld)";
-
-"Title_Changelog" = "Log thay đổi";
-
-"Title_Made_By" = "bởi opa334, évelyne\nUI bởi sourceloc\nDựa vào Fugu15";
-
-"Title_Supported_iOS_Versions" = "iOS 15.0 - 15.4.1 | A12 - A15, M1";
-
-"Update_Log_Hint_Scrollable" = "Trang Log có thể vuốt lên và xuống";
-
+// Update View
 "Update_Status_Downloading" = "Đang tải bản cập nhật...";
-
+"Update_Status_Subtitle_Please_Wait" = "Đang tải xuống các tệp thiết yếu, xin hãy kiên nhẫn";
 "Update_Status_Installing" = "Đang cài bản cập nhật...";
-
-"Update_Status_Subtitle_Please_Wait" = "Vui lòng chờ để tệp tin tải xuống";
-
 "Update_Status_Subtitle_Restart_Soon" = "Thiết bị sẽ khởi động lại";
+"Title_Changelog" = "Nhật ký sửa đổi";
+"Changelog_Unavailable_Text" = "Không có nhật ký sửa đổi";
 
-"Alert_Button_Uninstall" = "Gỡ cài đặt";
+// Removed Jailbreak Alert
+"Removed_Jailbreak_Alert_Title" = "Đã gỡ Jailbreak";
+"Removed_Jailbreak_Alert_Message" = "Gỡ bỏ Jailbreak thành công. Bạn nên khởi động lại thiết bị.";
+"Button_Close" = "Đóng";
 
-"Alert_Tweak_Injection_Toggled_Body" = "Khởi động lại User là cần thiết để áp dụng các thay đổi. Bạn có muốn làm ngay bây giờ không?";
+// Error View
+"Button_Share" = "Chia sẻ lỗi";
+"Button_Reboot" = "Khởi động lại";
 
-"Popup_Change_Mobile_Password_Title" = "Đổi mật khẩu Mobile";
+// Settings Toggles
+"Settings_Tweak_Injection" = "Cho phép chạy Tweak";
+"Settings_iDownload" = "iDownload (nhà phát triển)";
+"Settings_Verbose_Logs" = "Hiện Log dạng phức tạp";
+"Settings_Apps_JIT" = "Bật JIT";
+"Settings_Jetsam_Multiplier" = "Hệ số Jetsam";
 
-"Settings_Remove_Jailbreak_Alert_Body" = "Xóa Jailbreak sẽ xóa tất cả các tệp liên quan đến Jailbreak, tất cả các ứng dụng, tệp và dữ liệu thông thường sẽ được giữ. Bạn có chắc muốn tiếp tục? Hành động này không thể hoàn tác.";
+// Settings Buttons
+"Button_Remove_Jailbreak" = "Gỡ Jailbreak";
+"Button_Hide_Jailbreak" = "Ẩn Jailbreak";
+"Button_Unhide_Jailbreak" = "Bỏ ẩn Jailbreak";
+"Button_Refresh_Jailbreak_Apps" = "Làm mới các app Jailbreak";
+"Button_Reinstall_Package_Managers" = "Cài lại các trình quản lý gói";
+"Button_Change_Mobile_Password" = "Đổi mật khẩu \"mobile\"";
 
-"Settings_Remove_Jailbreak_Alert_Title" = "Xoá Jailbreak";
+// Settings Hints
+"Hint_Hide_Jailbreak" = "Tùy chọn \"Ẩn Jailbreak\" sẽ tạm thời xóa các tệp liên quan đến jailbreak và khôi phục lại các tệp này khi bạn jailbreak vào lần tới.";
+"Hint_Hide_Jailbreak_Jailbroken" = "Tùy chọn \"Ẩn Jailbreak\" sẽ tắt một số chức năng nhằm tránh phát hiện jailbreak trong các ứng dụng. Tuy nhiên, tính năng này không phải là hoàn hảo và không thể hoàn toàn ẩn jailbreak khỏi mọi ứng dụng.";
+"Section_Jailbreak_Settings" = "Thiết đặt Jailbreak";
+"Section_Actions" = "Tác vụ";
+"Section_Customization" = "Tùy biến";
+"Section_Exploits" = "Khai thác";
+"Jetsam_Description" = "Jetsam là một tính năng hệ thống nhằm tự động dừng các tiến trình vượt quá giới hạn bộ nhớ đã định. Khi có nhiều tweak được cài đặt, giới hạn này có thể bị vượt quá ngay khi tiến trình vừa khởi động, gây ra tình trạng treo. Ở mục này, bạn có thể chọn một hệ số nhất định, hệ số này sau đó sẽ được nhân với giới hạn bộ nhớ riêng của từng tiến trình. Tăng hệ số này nếu các ứng dụng hay tiến trình xuất hiện lỗi văng/treo, hoặc nếu hệ thống xuất hiện lỗi vặt khi có nhiều tweak được cài đặt. Tuy nhiên, bạn nên chọn hệ số thấp nhất có thể sao cho hệ thống vẫn chạy ổn định, tránh ảnh hưởng đến hiệu năng.";
 
-"Settings_Tweak_Injection_Toggled_Alert_Title" = "Yêu cầu khởi động lại Userspace";
+// Settings Alerts
+"Alert_Tweak_Injection_Toggled_Title" = "Khởi động lại Userspace";
+"Alert_Tweak_Injection_Toggled_Body" = "Cần khởi động lại Userspace để áp dụng các thay đổi. Bạn muốn khởi động lại ngay bây giờ hay để sau?";
+"Alert_Tweak_Injection_Toggled_Reboot_Now" = "Khởi động lại ngay";
+"Alert_Tweak_Injection_Toggled_Reboot_Later" = "Để sau";
+"Alert_Remove_Jailbreak_Title" = "Gỡ bỏ Jailbreak";
+"Alert_Remove_Jailbreak_Pressed_Body" = "Việc này sẽ xóa toàn bộ các tệp liên quan đến jailbreak. Các ứng dụng, tệp và dữ liệu thông thường sẽ vẫn được giữ nguyên. Bạn sẽ không thể hoàn tác sau khi nhấn \"Tiếp tục\".";
+"Alert_Remove_Jailbreak_Enabled_Body" = "Tùy chọn này sẽ xóa toàn bộ các tệp liên quan đến jailbreak khi bạn thực hiện jailbreak vào lần tới. Các ứng dụng, tệp và dữ liệu thông thường sẽ vẫn được giữ nguyên. Bạn sẽ không thể hoàn tác sau khi nhấn \"Tiếp tục\".";
+"Alert_Change_Mobile_Password_Body" = "Thiết đặt mật khẩu của người dùng \"mobile\", có thể sử dụng để lấy quyền root thông qua sudo. Nếu muốn đặt mật khẩu root, bạn có thể thực hiện bằng lệnh \"sudo passwd root\" trong terminal.";
+"Password_Placeholder" = "Nhập mật khẩu";
+"Repeat_Password_Placeholder" = "Nhập lại mật khẩu";
+"Button_Change" = "Đổi";
+"Button_Cancel" = "Hủy bỏ";
+"Button_Continue" = "Tiếp tục";
 
-"Select_Package_Managers_Install_Message" = "Nếu không chắc nên chọn cái nào, hãy chọn Sileo";
+// Duplicate Apps Errors
+"Duplicate_Apps_Error_Dopamine_App" = "Có nhiều ứng dụng với cùng một tên định danh \"%@\" được cài đặt trong thư mục ứng dụng của Dopamine (\"%@\"). Không thể tiếp tục.";
+"Duplicate_Apps_Error_User_App" = "Ứng dụng có tên định danh \"%@\" đã được cài đặt trong thư mục ứng dụng của Dopamine (\"%@\"), nhưng đồng thời cũng đã được cài đặt trên hệ thống. Không thể tiếp tục.";
+"Duplicate_Apps_Error_Icon_Cache" = "Ứng dụng có tên định danh \"%@\" đã được cài đặt trong thư mục ứng dụng của Dopamine (\"%@\"), nhưng lại được ghi bên trong icon cache với một đường dẫn khác (\"%@\"). Không thể tiếp tục.";
 
-"Select_Package_Managers_Reinstall_Message" = "Chọn trình quản lý gói để cài đặt lại";
+// Settings Lists
+"Theme" = "Chủ đề";
+"Kernel Exploit" = "Lỗ hổng Kernel";
+"PPL Bypass" = "Lỗ hổng PPL";
+"PAC Bypass" = "Lỗ hổng PAC";
+"None" = "Không có";
+"Recommended" = "Đề xuất";
 
-"Reinstall" = "Cài đặt lại";
+// Credits
+"Credits_Button_Discord" = "Discord";
+"Credits_Button_License" = "Giấy phép";
+"Credits_Button_Source_Code" = "Mã nguồn";
 
+// Logs
+"Initializing Environment" = "Khởi tạo môi trường Jailbreak";
+"Initializing Protection" = "Khởi tạo quy trình bảo vệ";
+"Loading BaseBin TrustCache" = "Đang tải TrustCache BaseBin";
+"Applying Bind Mount" = "Đang gắn Bind Mount";
+"Removing Jailbreak" = "Đang gỡ bỏ Jailbreak";
+"Elevating Privileges" = "Đang thực hiện nâng quyền";
+"Cleaning Up Exploits" = "Đang dọn dẹp khai thác";
+"Building Phys R/W Primitive" = "Đang dựng Phys R/W Primitive";
+"Rebooting Userspace" = "Đang kh.động lại Userspace";
+"Patchfinding" = "Đang chạy Patchfinding";
+"Exploiting Kernel (%@)" = "Kh.thác lỗ hổng Kernel (%@)";
+"Bypassing PAC (%@)" = "Kh.thác lỗ hổng PAC (%@)";
+"Bypassing PPL (%@)" = "Kh.thác lỗ hổng PPL (%@)";
+
+// Package Manager selection
+"Status_Title_Select_Package_Managers" = "Chọn trình quản lý gói";
+"Select_Package_Managers_Install_Message" = "Nếu bạn không biết nên nhấn vào lựa chọn nào, hãy chọn Sileo (sẽ không bao giờ có Cydia cho bạn chọn)";
 "Continue" = "Tiếp tục";
-
-"Close" = "Đóng";
-
-"Title_Mismatching_Environment_Version" = "Phiên bản \"Môi trường\" không khớp";
-
-"Mismatching_Environment_Version_Update_Body" = "Phiên bản \”Môi trường\” mà thiết bị này đã được Jailbreak với (%@) không khớp với phiên bản ứng dụng hiện đang được cài đặt (%@)\nNhấn cập nhật sẽ cập nhật \”Môi trường\” Jailbreak lên một trong những ứng dụng hiện đang được cài đặt, thiết bị của bạn sẽ khởi động lại Userspace sau đó.";

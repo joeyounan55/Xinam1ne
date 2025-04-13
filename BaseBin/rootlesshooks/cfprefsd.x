@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "substrate.h"
-
+#import <substrate.h>
 
 BOOL preferencePlistNeedsRedirection(NSString *plistPath)
 {
@@ -38,18 +37,16 @@ BOOL preferencePlistNeedsRedirection(NSString *plistPath)
 	return ![additionalSystemPlistNames containsObject:plistName];
 }
 
-
-BOOL (*orig_CFPrefsGetPathForTriplet)(CFStringRef, CFStringRef, BOOL, CFStringRef, UInt8*);
-BOOL new_CFPrefsGetPathForTriplet(CFStringRef bundleIdentifier, CFStringRef user, BOOL byHost, CFStringRef path, UInt8 *buffer)
+%hookf(BOOL, _CFPrefsGetPathForTriplet, CFStringRef bundleIdentifier, CFStringRef user, BOOL byHost, CFStringRef path, UInt8 *buffer)
 {
-	BOOL orig = orig_CFPrefsGetPathForTriplet(bundleIdentifier, user, byHost, path, buffer);
+	BOOL orig = %orig(bundleIdentifier, user, byHost, path, buffer);
 
 	if(orig && buffer && !access("/var/jb", F_OK))
 	{
 		NSString* origPath = [NSString stringWithUTF8String:(char*)buffer];
 		BOOL needsRedirection = preferencePlistNeedsRedirection(origPath);
 		if (needsRedirection) {
-			NSLog(@"Plist redirected to /var/jb: %@", origPath);
+			//NSLog(@"Plist redirected to /var/jb: %@", origPath);
 			strcpy((char*)buffer, "/var/jb");
 			strcat((char*)buffer, origPath.UTF8String);
 		}
@@ -61,11 +58,7 @@ BOOL new_CFPrefsGetPathForTriplet(CFStringRef bundleIdentifier, CFStringRef user
 void cfprefsdInit(void)
 {
 	MSImageRef coreFoundationImage = MSGetImageByName("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation");
-	void* CFPrefsGetPathForTriplet_ptr = MSFindSymbol(coreFoundationImage, "__CFPrefsGetPathForTriplet");
-	if(CFPrefsGetPathForTriplet_ptr)
-	{
-		MSHookFunction(CFPrefsGetPathForTriplet_ptr, (void *)&new_CFPrefsGetPathForTriplet, (void **)&orig_CFPrefsGetPathForTriplet);
+	if (coreFoundationImage) {
+		%init(_CFPrefsGetPathForTriplet = MSFindSymbol(coreFoundationImage, "__CFPrefsGetPathForTriplet"));
 	}
-
-	%init();
 }

@@ -1,115 +1,109 @@
 #import <Foundation/Foundation.h>
 #import <libjailbreak/libjailbreak.h>
-#import <libjailbreak/handoff.h>
-#import <libjailbreak/kcall.h>
-#import <libjailbreak/launchd.h>
-#import <libfilecom/FCHandler.h>
+#import <libjailbreak/util.h>
+#import <libjailbreak/kernel.h>
 #import <mach-o/dyld.h>
 #import <spawn.h>
+#import <pthread.h>
+#import <substrate.h>
 
-#import <sandbox.h>
 #import "spawn_hook.h"
 #import "xpc_hook.h"
 #import "daemon_hook.h"
 #import "ipc_hook.h"
-#import "dsc_hook.h"
+#import "jetsam_hook.h"
 #import "crashreporter.h"
-#import "../systemhook/src/common.h"
+#import "boomerang.h"
+#import "update.h"
+#import "jbserver/jbserver_local.h"
 
-int gLaunchdImageIndex = -1;
+bool gInEarlyBoot = true;
 
-NSString *generateSystemWideSandboxExtensions(void)
-{
-	NSMutableString *extensionString = [NSMutableString new];
-
-	// Make /var/jb readable
-	[extensionString appendString:[NSString stringWithUTF8String:sandbox_extension_issue_file("com.apple.app-sandbox.read", prebootPath(nil).fileSystemRepresentation, 0)]];
-	[extensionString appendString:@"|"];
-
-	// Make binaries in /var/jb executable
-	[extensionString appendString:[NSString stringWithUTF8String:sandbox_extension_issue_file("com.apple.sandbox.executable", prebootPath(nil).fileSystemRepresentation, 0)]];
-	[extensionString appendString:@"|"];
-
-	// Ensure the whole system has access to com.opa334.jailbreakd.systemwide
-	[extensionString appendString:[NSString stringWithUTF8String:sandbox_extension_issue_mach("com.apple.app-sandbox.mach", "com.opa334.jailbreakd.systemwide", 0)]];
-	[extensionString appendString:@"|"];
-	[extensionString appendString:[NSString stringWithUTF8String:sandbox_extension_issue_mach("com.apple.security.exception.mach-lookup.global-name", "com.opa334.jailbreakd.systemwide", 0)]];
-
-	return extensionString;
-}
+void abort_with_reason(uint32_t reason_namespace, uint64_t reason_code, const char *reason_string, uint64_t reason_flags);
+extern void systemwide_domain_set_enabled(bool enabled);
 
 __attribute__((constructor)) static void initializer(void)
 {
 	crashreporter_start();
-	bool comingFromUserspaceReboot = bootInfo_getUInt64(@"environmentInitialized");
-	if (comingFromUserspaceReboot) {
 
-		// super hacky fix to support OTA updates from 1.0.x to 1.1
-		// I hate it, but there is no better way :/
-		NSURL *disabledLaunchDaemonURL = [NSURL fileURLWithPath:prebootPath(@"basebin/LaunchDaemons/Disabled") isDirectory:YES];
-		NSArray<NSURL *> *disabledLaunchDaemonPlistURLs = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:disabledLaunchDaemonURL includingPropertiesForKeys:nil options:0 error:nil];
-		for (NSURL *disabledLaunchDaemonPlistURL in disabledLaunchDaemonPlistURLs) {
-			patchBaseBinLaunchDaemonPlist(disabledLaunchDaemonPlistURL.path);
-		}
+	// If we performed a jbupdate before the userspace reboot, these vars will be set
+	// In that case, we want to run finalizers
+	const char *jbupdatePrevVersion = getenv("JBUPDATE_PREV_VERSION");
+	const char *jbupdateNewVersion = getenv("JBUPDATE_NEW_VERSION");
+	if (jbupdatePrevVersion && jbupdateNewVersion) {
+		jbupdate_finalize_stage1(jbupdatePrevVersion, jbupdateNewVersion);
+	}
 
-		// Launchd was already initialized before, we are coming from a userspace reboot... recover primitives
-		// First get PPLRW primitives
-		__block pid_t boomerangPid = 0;
-		dispatch_semaphore_t sema = dispatch_semaphore_create(0);
-		FCHandler *handler = [[FCHandler alloc] initWithReceiveFilePath:prebootPath(@"basebin/.communication/boomerang_to_launchd") sendFilePath:prebootPath(@"basebin/.communication/launchd_to_boomerang")];
-		handler.receiveHandler = ^(NSDictionary *message) {
-			NSString *identifier = message[@"id"];
-			if (identifier) {
-				if ([identifier isEqualToString:@"receivePPLRW"])
-				{
-					boomerangPid = [(NSNumber*)message[@"boomerangPid"] intValue];
-					initPPLPrimitives();
-					dispatch_semaphore_signal(sema);
-				}
-			}
-		};
-		[handler sendMessage:@{ @"id" : @"getPPLRW" }];
-		dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-		recoverPACPrimitives();
-		[handler sendMessage:@{ @"id" : @"primitivesInitialized" }];
-		[[NSFileManager defaultManager] removeItemAtPath:prebootPath(@"basebin/.communication") error:nil];
-		if (boomerangPid != 0) {
-			int status;
-			waitpid(boomerangPid, &status, WEXITED);
-			waitpid(boomerangPid, &status, 0);
+	bool firstLoad = false;
+	if (getenv("DOPAMINE_INITIALIZED") != 0) {
+		// If Dopamine was initialized before, we assume we're coming from a userspace reboot
+
+		// Stock bug: These prefs wipe themselves after a reboot (they contain a boot time and this is matched when they're loaded)
+		// But on userspace reboots, they apparently do not get wiped as the boot time doesn't change
+		// We could try to change the boot time ourselves, but I'm worried of potential side effects
+		// So we just wipe the offending preferences ourselves
+		// In practice this fixes nano launch daemons not being loaded after the userspace reboot, resulting in certain apple watch features breaking
+		if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist", W_OK)) {
+			remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRRootCommander.volatile.plist");
 		}
-		bootInfo_setObject(@"jbdIconCacheNeedsRefresh", @1);
+		if (!access("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist", W_OK)) {
+			remove("/var/mobile/Library/Preferences/com.apple.NanoRegistry.NRLaunchNotificationController.volatile.plist");
+		}
 	}
 	else {
-		// Launchd hook loaded for first time, get primitives from jailbreakd
-		jbdInitPPLRW();
-		recoverPACPrimitives();
+		// Here we should have been injected into a live launchd on the fly
+		// In this case, we are not in early boot...
+		gInEarlyBoot = false;
+		firstLoad = true;
 	}
 
-	for (int i = 0; i < _dyld_image_count(); i++) {
-		if(!strcmp(_dyld_get_image_name(i), "/sbin/launchd")) {
-			gLaunchdImageIndex = i;
-			break;
-		}
+	int err = boomerang_recoverPrimitives(firstLoad, true);
+	if (err != 0) {
+		char msg[1000];
+		snprintf(msg, 1000, "Dopamine: Failed to recover primitives (error %d), cannot continue.", err);
+		abort_with_reason(7, 1, msg, 0);
+		return;
 	}
-	// System wide sandbox extensions and root path
-	setenv("JB_SANDBOX_EXTENSIONS", generateSystemWideSandboxExtensions().UTF8String, 1);
-	setenv("JB_ROOT_PATH", prebootPath(nil).fileSystemRepresentation, 1);
-	JB_SandboxExtensions = strdup(getenv("JB_SANDBOX_EXTENSIONS"));
-	JB_RootPath = strdup(getenv("JB_ROOT_PATH"));
 
-	proc_set_debugged_pid(getpid(), false);
-	
-	
+	if (jbupdatePrevVersion && jbupdateNewVersion) {
+		jbupdate_finalize_stage2(jbupdatePrevVersion, jbupdateNewVersion);
+		unsetenv("JBUPDATE_PREV_VERSION");
+		unsetenv("JBUPDATE_NEW_VERSION");
+	}
+
+	cs_allow_invalid(proc_self(), false);
+
 	initXPCHooks();
 	initDaemonHooks();
 	initSpawnHooks();
 	initIPCHooks();
-	initDSCHooks();
+	initJetsamHook();
+
+	if (getenv("DOPAMINE_IS_HIDDEN") != 0) {
+		// If the jailbreak is currently hidden, fakelib had to be mounted again before the userspace reboot
+		// Now that the userspace reboot is over, we can unmount it again
+
+		// Just like when we mount it inside the posix_spawn hook, the jbserver is not up at this point in time
+		// So we need to host our own here again, just so that jbctl can talk to it
+		mach_port_t serverPort = jbserver_local_start();
+		jbctl_earlyboot(serverPort, "internal", "fakelib", "unmount", NULL);
+		jbserver_local_stop();
+
+		// Also disable the systemwide domain again
+		systemwide_domain_set_enabled(false);
+
+		// No need to keep this around
+		unsetenv("DOPAMINE_IS_HIDDEN");
+	}
 
 	// This will ensure launchdhook is always reinjected after userspace reboots
 	// As this launchd will pass environ to the next launchd...
-	setenv("DYLD_INSERT_LIBRARIES", prebootPath(@"basebin/launchdhook.dylib").fileSystemRepresentation, 1);
+	setenv("DYLD_INSERT_LIBRARIES", JBROOT_PATH("/basebin/launchdhook.dylib"), 1);
 
-	bootInfo_setObject(@"environmentInitialized", @1);
+	// Mark Dopamine as having been initialized before
+	setenv("DOPAMINE_INITIALIZED", "1", 1);
+
+	// Set an identifier that uniquely identifies this userspace boot
+	// Part of rootless v2 spec
+	setenv("LAUNCHD_UUID", [NSUUID UUID].UUIDString.UTF8String, 1);
 }

@@ -1,15 +1,14 @@
 TARGET = forkfix.dylib
 CC = clang
 
-CFLAGS = -I../_shared -I./src -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64e -miphoneos-version-min=15.0 -O2
-LDFLAGS = -dynamiclib ../systemhook/systemhook.dylib
+CFLAGS = -I../.include -I./src -I../_external/modules/litehook/src -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64e -Wno-deprecated-declarations -miphoneos-version-min=15.0 -O2
+LDFLAGS = ../systemhook/systemhook.dylib -dynamiclib
 
 sign: $(TARGET)
 	@ldid -S $^
 
-$(TARGET): $(wildcard src/*.c src/*.S)
+$(TARGET): $(wildcard src/*.c src/*.S ../libjailbreak/src/jbclient_*.c)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
-	install_name_tool -change "systemhook.dylib" "/usr/lib/systemhook.dylib" $@
 
 clean:
 	@rm -f $(TARGET)

@@ -1,159 +1,114 @@
-"Bootstrapping" = "Bootstrapping";
-
-"Button_Cancel" = "Ακύρωση";
-
-"Button_Hide_Jailbreak" = "Απόκρυψη Jailbreak";
-
-"Button_Hide_Logs_Title" = "Απόκρυψη αρχείου καταγραφής";
-
-"Button_Jailbreak_Title" = "Jailbreak";
-
-"Button_Remove_Jailbreak" = "Αφαίρεση Jailbreak";
-
-"Button_Set_Mobile_Password" = "Εισαγωγή κωδικού χρήστη Mobile";
-
-"Popup_Change_Mobile_Password_Message" = "Ορίστε τον κωδικό του χρήστη Mobile της συσκευής, Ο χρήστης αυτός μπορεί να χρησιμοποιηθεί και με δικαιώματα διαχειριστή (root) χρησιμοποιώντας την εντολή sudo. Εάν θέλετε να ορίσετε τον κωδικό διαχειριστή (root), μπορείτε να το κάνετε χρησιμοποιώντας στο τερματικό(shell) την εντολή \"sudo passwd root\"";
-
-"Button_Reinstall_Package_Managers" = "Επανεγκατάσταση εφαρμοφών διαχείρισης πακέτων";
-
-"Button_Set" = "Ορισμός";
-
-"Button_Show_Logs_Title" = "Εμφάνιση αρχείου καταγραφής";
-
-"Button_Unhide_Jailbreak" = "Επανεμφάνιση Jailbreak";
-
-"Button_Update" = "Ενημέρωση";
-
-"Button_Update_Available" = "Διαθέσιμη ενημέρωση";
-
-"Button_Update_Environment" = "Ενημέρωση Περιβάλλοντος";
-
-"Bypassing PAC" = "Παράκαμψη PAC";
-
-"Bypassing PPL" = "Παράκαμψη PPL";
-
-"Changelog_Unavailable_Text" = "Αρχείο αλλαγών μη διαθέσιμο";
-
-"Context_Menu_Copy_To_Clipboard" = "Αντιγραφή";
-
-"Credits_Button_Discord" = "Discord";
-
-"Credits_Button_License" = "Άδεια χρήσης";
-
-"Credits_Button_Source_Code" = "Πηγαίος κώδικας";
-
-"Credits_Footer_Dopamine_Version %@\nOS:%@" = "Έκδοση Dopamine %@\n%@";
-
-"Credits_Header_Special_Thanks" = "Ιδιαίτερες ευχαριστίες:";
-
 "Credits_Made_By" = "Δημιουργήθηκε από opa334, évelyne";
 
-"Credits_Made_By_Subheadline" = "Γραφικό περιβάλλον από sourcelocation\nΛογότυπο και εικονίδιο από xerus";
+// Log
+"Status_Title_Jailbreaking" = "Jailbreaking";
+"Log_Error" = "Αποτυχία";
 
-"Finalizing Bootstrap" = "Ολοκλήρωση Bootstrap";
+// Jailbreak Button
+"Button_Jailbreak_Title" = "Jailbreak";
+"Status_Title_Jailbroken" = "Jailbroken";
+/*Unsupported*/
 
-"Gaining r/w" = "Απόκτηση δικαιωμάτων r/w";
-
-"Hint_Hide_Jailbreak" = "\"Απόκρυψη Jailbreak\" Αφαιρεί προσωρινά τα αρχεία που σχετίζονται με το jailbreak μέχρι το απόμενο jailbreak";
-
-"Hint_Hide_Jailbreak_Jailbroken" = "\"Απόκρυψη Jailbreak\" απενεργοποιεί μερικώς το jailbreak στοχεύοντας να κάνει την ανίχνευση του δυσκολότερη. Ωστόσο, δεν είναι απολύτως αποτελεσματικό και δεν το αποκρύπτει ολικώς.";
-
-"Initializing Environment" = "Αρχικοποίηση Περιβάλλοντος";
-
-"Initializing System Hook" = "Αρχικοποίηση System Hook";
-
-"Jailbreak_Done" = "Έτοιμο!";
-
-"Launching kexploitd" = "Εκκίνηση kexploitd";
-
-"Enabling Wi-Fi" = "Ενεργοποίηση Wi-Fi";
-
-"Disabling Wi-Fi" = "Απενεργοποίηση Wi-Fi";
-
-"Launching oobPCI" = "Εκκίνηση oobPCI";
-
-"Loading Basebin Trustcache" = "Φόρτωση Basebin Trustcache";
-
+// Action Menu
+"Menu_Settings_Title" = "Ρυθμίσεις";
+"Menu_Restart_SpringBoard_Title" = "Επανεκκίνηση SpringBoard";
+"Menu_Reboot_Userspace_Title" = "Επανεκκίνηση Userspace";
 "Menu_Credits_Title" = "Ειδική μνεία";
 
-"Menu_Settings_Title" = "Ρυθμίσεις";
+// Updating
+"Button_Update" = "Ενημέρωση";
+"Button_Update_Available" = "Διαθέσιμη ενημέρωση";
+"Button_Update_Environment" = "Ενημέρωση Περιβάλλοντος";
 
-"Menu_Reboot_Userspace_Title" = "Επανεκκίνηση Userspace";
-
-"Menu_Restart_SpringBoard_Title" = "Επανεκκίνηση SpringBoard";
-
-"Settings_iDownload" = "iDownload (Τερματικό προγραμματιστή)";
-
-"Settings_Tweak_Injection" = "Ενσωμάτωση Tweak";
-
-"Settings_Verbose_Logs" = "Λεπτομερής καταγραφή";
-
-"Settings_Should_Xinamine" = "Ενεργοποίηση Xinamine";
-
-"Patchfinding" = "Patchfinding";
-
-"PM_Reinstall_Done_Text" = "Οι επιλεγμένες εφαρμογές διαχείρισης πακέτων επανεγκαταστάθηκαν";
-
-"Rebuilding TrustCache" = "Ανανέωση TrustCache";
-
-"Refreshing Icon Cache" = "Ανανέωση Icon Cache";
-
-"Settings_Footer_Device_Bootstrapped" = "Το bootstrap της συσκευής ολοκληρώθηκε επιτυχώς";
-
-"Settings_Footer_Device_Not_Bootstrapped" = "Η προσπάθεια για bootstrap της συσκευής απέτυχε";
-
-"Starting jailbreakd" = "Εκκίνηση jailbreakd";
-
-"Starting Launch Daemons" = "Εκκίνηση Launch Daemons";
-
-"Status_Title_Jailbreaking" = "Jailbreaking";
-
-"Status_Title_Jailbroken" = "Jailbroken";
-
-"Status_Title_Select_Package_Managers" = "Επιλογή εφαρμογής/ών διαχείρισης πακέτων";
-
-"Status_Title_Unsuccessful" = "Αποτυχία";
-
-"Success_Rate %@%% (%lld/%lld)" = "Ποσοστό επιτυχίας: %@%% (%lld/%lld)";
-
-"Title_Changelog" = "Αρχείο αλλαγών";
-
-"Title_Made_By" = "από opa334, évelyne\nΓραφικό περιβάλλον από sourceloc\nΒασισμένο στο Fugu15";
-
-"Title_Supported_iOS_Versions" = "iOS 15.0 - 15.4.1 | A12 - A15, M1";
-
-"Update_Log_Hint_Scrollable" = "Η οθόνη καταγραφής μπορεί να μετακινηθεί";
-
+// Update View
 "Update_Status_Downloading" = "Λήψη αναβάθμισης...";
-
-"Update_Status_Installing" = "Εγκατάσταση αναβάθμισης...";
-
 "Update_Status_Subtitle_Please_Wait" = "Παρακαλώ αναμείνατε την ολοκλήρωση λήψης των αρχείων";
-
+"Update_Status_Installing" = "Εγκατάσταση αναβάθμισης...";
 "Update_Status_Subtitle_Restart_Soon" = "Η συσκευή θα επανεκκινήσει σύντομα";
+"Title_Changelog" = "Αρχείο αλλαγών";
+"Changelog_Unavailable_Text" = "Αρχείο αλλαγών μη διαθέσιμο";
 
-"Alert_Button_Uninstall" = "Απεγκατάσταση";
+// Removed Jailbreak Alert
+/*Removed_Jailbreak_Alert_Title*/
+/*Removed_Jailbreak_Alert_Message*/
+/*Button_Close*/
 
+// Error View
+/*Button_Share*/
+/*Button_Reboot*/
+
+// Settings Toggles
+"Settings_Tweak_Injection" = "Ενσωμάτωση Tweak";
+"Settings_iDownload" = "iDownload (Τερματικό προγραμματιστή)";
+"Settings_Verbose_Logs" = "Λεπτομερής καταγραφή";
+/*Settings_Apps_JIT*/
+
+// Settings Buttons
+"Button_Remove_Jailbreak" = "Αφαίρεση Jailbreak";
+"Button_Hide_Jailbreak" = "Απόκρυψη Jailbreak";
+"Button_Unhide_Jailbreak" = "Επανεμφάνιση Jailbreak";
+/*Button_Refresh_Jailbreak_Apps*/
+"Button_Reinstall_Package_Managers" = "Επανεγκατάσταση εφαρμοφών διαχείρισης πακέτων";
+/*Button_Change_Mobile_Password*/
+
+// Settings Hints
+"Hint_Hide_Jailbreak" = "\"Απόκρυψη Jailbreak\" Αφαιρεί προσωρινά τα αρχεία που σχετίζονται με το jailbreak μέχρι το απόμενο jailbreak";
+"Hint_Hide_Jailbreak_Jailbroken" = "\"Απόκρυψη Jailbreak\" απενεργοποιεί μερικώς το jailbreak στοχεύοντας να κάνει την ανίχνευση του δυσκολότερη. Ωστόσο, δεν είναι απολύτως αποτελεσματικό και δεν το αποκρύπτει ολικώς.";
+/*Section_Jailbreak_Settings*/
+/*Section_Actions*/
+/*Section_Customization*/
+/*Section_Exploits*/
+
+// Settings Alerts
+/*Alert_Tweak_Injection_Toggled_Title*/
 "Alert_Tweak_Injection_Toggled_Body" = "Για να εφαρμοστούν οι αλλαγές, πρέπει να γίνει επανεκκίνηση Userspace. Θέλεις να γίνει επανεκκίνηση τώρα;";
+/*Alert_Tweak_Injection_Toggled_Reboot_Now*/
+/*Alert_Tweak_Injection_Toggled_Reboot_Later*/
+"Alert_Remove_Jailbreak_Title" = "Αφαίρεση Jailbreak";
+"Alert_Remove_Jailbreak_Pressed_Body" = "Η αφαίρεση του jailbreak θα διαγράψει όλα τα αρχεία που σχετίζονται με το jailbreak, αλλά όλες οι συνήθεις εφαρμογές, αρχεία και δεδομένα θα διατηρηθούν. Είστε σίγουροι πως θέλετε να συνεχίσετε; Δεν μπορείτε να αντιστρέψετε αυτή την ενέργεια.";
+/*Alert_Remove_Jailbreak_Enabled_Body*/
+/*Alert_Change_Mobile_Password_Body*/
+/*Password_Placeholder*/
+/*Repeat_Password_Placeholder*/
+/*Button_Change*/
+"Button_Cancel" = "Ακύρωση";
+"Button_Continue" = "Continue";
 
-"Popup_Change_Mobile_Password_Title" = "Αλλαγή κωδικού Mobile";
+// Duplicate Apps Errors
+/*Duplicate_Apps_Error_Dopamine_App*/
+/*Duplicate_Apps_Error_User_App*/
+/*Duplicate_Apps_Error_Icon_Cache*/
 
-"Settings_Remove_Jailbreak_Alert_Body" = "Η αφαίρεση του jailbreak θα διαγράψει όλα τα αρχεία που σχετίζονται με το jailbreak, αλλά όλες οι συνήθεις εφαρμογές, αρχεία και δεδομένα θα διατηρηθούν. Είστε σίγουροι πως θέλετε να συνεχίσετε; Δεν μπορείτε να αντιστρέψετε αυτή την ενέργεια.";
+// Settings Lists
+/*Theme*/
+/*Kernel Exploit*/
+/*PPL Bypass*/
+/*PAC Bypass*/
+/*None*/
+/*Recommended*/
 
-"Settings_Remove_Jailbreak_Alert_Title" = "Αφαίρεση Jailbreak";
+// Credits
+"Credits_Button_Discord" = "Discord";
+"Credits_Button_License" = "Άδεια χρήσης";
+"Credits_Button_Source_Code" = "Πηγαίος κώδικας";
 
-"Settings_Tweak_Injection_Toggled_Alert_Title" = "Απαραίτητη επανεκκίνηση Userspace";
+// Logs
+"Initializing Environment" = "Αρχικοποίηση Περιβάλλοντος";
+/*Initializing Protection*/
+/*Loading BaseBin TrustCache*/
+/*Applying Bind Mount*/
+/*Removing Jailbreak*/
+/*Elevating Privileges*/
+/*Cleaning Up Exploits*/
+/*Building Phys R/W Primitive*/
+/*Rebooting Userspace*/
+"Patchfinding" = "Patchfinding";
+/*Exploiting Kernel (%@)*/
+/*Bypassing PAC (%@)*/
+/*Bypassing PPL (%@)*/
 
+// Package Manager selection
+"Status_Title_Select_Package_Managers" = "Επιλογή εφαρμογής/ών διαχείρισης πακέτων";
 "Select_Package_Managers_Install_Message" = "Αν δεν είστε σίγουροι, επιλέξτε το Sileo";
-
-"Select_Package_Managers_Reinstall_Message" = "Επιλέξτε εγαρμογή/ες διαχείρισης πακέτων για επανεγκατάσταση";
-
-"Reinstall" = "Επανεγκατάσταση";
-
 "Continue" = "Συνέχεια";
 
-"Close" = "Κλείσιμο";
-
-"Title_Mismatching_Environment_Version" = "Αναντιστοιχία έκδοσης περιβάλλοντος";
-
-"Mismatching_Environment_Version_Update_Body" = "Η έκδοση περιβάλλοντος με την οποία η συσκευή σας έκανε jailbreak (%@) δεν αντιστοιχεί στην έκδοση της εφαρμογής που έχετε εγκατεστημένη (%@)\nΠατώντας αναβάθμιση θα αναβαθμιστεί το περιβάλλον του jailbreak με αυτό της εφαρμογής που έχετε τώρα εγκατεστημένη, αμέσως μετά η συσκευή σας θα προβεί σε επανεκκίνηση userspace.";

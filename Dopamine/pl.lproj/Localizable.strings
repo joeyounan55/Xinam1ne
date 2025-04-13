@@ -1,159 +1,114 @@
-"Bootstrapping" = "Bootstrapping";
-
-"Button_Cancel" = "Anuluj";
-
-"Button_Hide_Jailbreak" = "Ukryj Jailbreak";
-
-"Button_Hide_Logs_Title" = "Ukryj Logi";
-
-"Button_Jailbreak_Title" = "Jailbreak";
-
-"Button_Remove_Jailbreak" = "Usuń Jailbreak";
-
-"Button_Set_Mobile_Password" = "Ustaw hasło telefonu";
-
-"Popup_Change_Mobile_Password_Message" = "Ustaw hasło swojego urządzenia, które można również użyć do uzyskania dostępu do konta root za pomocą sudo. Jeśli chcesz ustawić hasło roota, możesz to zrobić w wierszu poleceń, używając komendy \"sudo passwd root\"";
-
-"Button_Reinstall_Package_Managers" = "Reinstall Package Managers";
-
-"Button_Set" = "Ustaw";
-
-"Button_Show_Logs_Title" = "Pokaż Logi";
-
-"Button_Unhide_Jailbreak" = "Odkryj Jailbreak";
-
-"Button_Update" = "Aktualizuj";
-
-"Button_Update_Available" = "Dostępna aktualizacja";
-
-"Button_Update_Environment" = "Update Environment";
-
-"Bypassing PAC" = "Omijanie PAC";
-
-"Bypassing PPL" = "Omijanie PPL";
-
-"Changelog_Unavailable_Text" = "Dziennik zmian niedostępny";
-
-"Context_Menu_Copy_To_Clipboard" = "Skopiuj do schowka";
-
-"Credits_Button_Discord" = "Discord";
-
-"Credits_Button_License" = "Licencja";
-
-"Credits_Button_Source_Code" = "Kod Źródłowy";
-
-"Credits_Footer_Dopamine_Version %@\nOS:%@" = "Dopamine version %@\n%@";
-
-"Credits_Header_Special_Thanks" = "Podziękowania:";
-
 "Credits_Made_By" = "Stworzone przez: opa334, évelyne";
 
-"Credits_Made_By_Subheadline" = "Interfejs stworzony przez sourcelocation\na logo i ikona przez xerus";
+// Log
+"Status_Title_Jailbreaking" = "Jailbreakowanie";
+"Log_Error" = "Niepowodzenie";
 
-"Finalizing Bootstrap" = "Finalizowanie Bootstrapu";
+// Jailbreak Button
+"Button_Jailbreak_Title" = "Jailbreakuj";
+"Status_Title_Jailbroken" = "Jailbreak aktywny";
+"Unsupported" = "Niewspierane";
 
-"Gaining r/w" = "Zdobywanie r/w";
-
-"Hint_Hide_Jailbreak" = "\"Ukryj Jailbreak\" tymczasowo usuwa wszystkie pliki kojarzone z Jailbreakiem (aż do następnego Jailbreakowania)";
-
-"Hint_Hide_Jailbreak_Jailbroken" = "\"Hide Jailbreak\" partially disables the jailbreak and aims to make detection more challenging. However, it is not entirely effective and does not conceal everything.";
-
-"Initializing Environment" = "Inicjowanie Środowiska";
-
-"Initializing System Hook" = "Inicjowanie System Hook";
-
-"Jailbreak_Done" = "Gotowe!";
-
-"Launching kexploitd" = "Uruchamianie kexploitd";
-
-"Enabling Wi-Fi" = "Enabling Wi-Fi";
-
-"Disabling Wi-Fi" = "Disabling Wi-Fi";
-
-"Launching oobPCI" = "Uruchamianie oobPCI";
-
-"Loading Basebin Trustcache" = "Ładowanie Basebin Trustcache";
-
+// Action Menu
+"Menu_Settings_Title" = "Ustawienia";
+"Menu_Restart_SpringBoard_Title" = "Restartuj SpringBoard";
+"Menu_Reboot_Userspace_Title" = "Restartuj Userspace";
 "Menu_Credits_Title" = "Podziękowania";
 
-"Menu_Settings_Title" = "Ustawienia";
+// Updating
+"Button_Update" = "Aktualizuj";
+"Button_Update_Available" = "Dostępna aktualizacja";
+"Button_Update_Environment" = "Update Environment";
 
-"Menu_Reboot_Userspace_Title" = "Restartuj Userspace";
-
-"Menu_Restart_SpringBoard_Title" = "Restartuj SpringBoard";
-
-"Settings_iDownload" = "iDownload (Terminal dla deweloperów)";
-
-"Settings_Tweak_Injection" = "Tweak Injection";
-
-"Settings_Verbose_Logs" = "Logi Verbose";
-
-"Settings_Should_Xinamine" = "Włącz Xinamine";
-
-"Patchfinding" = "Patchfindinding";
-
-"PM_Reinstall_Done_Text" = "The selected package managers have been reinstalled";
-
-"Rebuilding TrustCache" = "Odbudowywanie TrustCache";
-
-"Refreshing Icon Cache" = "Odbudowywanie Icon Cache";
-
-"Settings_Footer_Device_Bootstrapped" = "Urządznie ma bootstrap";
-
-"Settings_Footer_Device_Not_Bootstrapped" = "Urządzenie nie ma bootstrapu";
-
-"Starting jailbreakd" = "Startowanie jailbreakd";
-
-"Starting Launch Daemons" = "Startowanie Launch Daemons";
-
-"Status_Title_Jailbreaking" = "Jailbreakowanie";
-
-"Status_Title_Jailbroken" = "Jailbroken";
-
-"Status_Title_Select_Package_Managers" = "Wybierz menadżer(y) pakietów";
-
-"Status_Title_Unsuccessful" = "Niepowodzenie";
-
-"Success_Rate %@%% (%lld/%lld)" = "Szansa powodzenia: %@%% (%lld/%lld)";
-
-"Title_Changelog" = "Dziennik Zmian";
-
-"Title_Made_By" = "by opa334, évelyne\nUI by sourceloc\nBased on Fugu15";
-
-"Title_Supported_iOS_Versions" = "iOS 15.0 - 15.4.1 | A12 - A15, M1";
-
-"Update_Log_Hint_Scrollable" = "Można scrollować w widoku logów";
-
+// Update View
 "Update_Status_Downloading" = "Pobieranie aktualizacji...";
-
-"Update_Status_Installing" = "Instalowanie aktualizacji...";
-
 "Update_Status_Subtitle_Please_Wait" = "Proszę czekać, aż pliki skończą się pobierać";
-
+"Update_Status_Installing" = "Instalowanie aktualizacji...";
 "Update_Status_Subtitle_Restart_Soon" = "Urządzenie wkrótce uruchomi się ponownie";
+"Title_Changelog" = "Dziennik zmian";
+"Changelog_Unavailable_Text" = "Dziennik zmian niedostępny";
 
-"Alert_Button_Uninstall" = "Odinstaluj";
+// Removed Jailbreak Alert
+/*Removed_Jailbreak_Alert_Title*/
+/*Removed_Jailbreak_Alert_Message*/
+/*Button_Close*/
 
+// Error View
+/*Button_Share*/
+/*Button_Reboot*/
+
+// Settings Toggles
+"Settings_Tweak_Injection" = "Wstrzykiwanie tweaków";
+"Settings_iDownload" = "iDownload (terminal dla deweloperów)";
+"Settings_Verbose_Logs" = "Logi verbose";
+/*Settings_Apps_JIT*/
+
+// Settings Buttons
+"Button_Remove_Jailbreak" = "Usuń jailbreak";
+"Button_Hide_Jailbreak" = "Ukryj jailbreak";
+"Button_Unhide_Jailbreak" = "Odkryj jailbreak";
+/*Button_Refresh_Jailbreak_Apps*/
+"Button_Reinstall_Package_Managers" = "Przeinstaluj menedżery pakietów";
+/*Button_Change_Mobile_Password*/
+
+// Settings Hints
+"Hint_Hide_Jailbreak" = "\"Ukryj jailbreak\" tymczasowo usuwa wszystkie pliki związane z jailbreakiem (aż do następnego jailbreakowania)";
+"Hint_Hide_Jailbreak_Jailbroken" = "\"Ukryj jailbreak\" częściowo wyłącza jailbreak i próbuje utrudnić jego wykrycie. Nie jest to jednak w pełni skuteczne i nie ukrywa wszystkiego.";
+/*Section_Jailbreak_Settings*/
+/*Section_Actions*/
+/*Section_Customization*/
+/*Section_Exploits*/
+
+// Settings Alerts
+/*Alert_Tweak_Injection_Toggled_Title*/
 "Alert_Tweak_Injection_Toggled_Body" = "Aby zmiany zostały zastosowane, musisz zrestartować Userspace. Czy chcesz zrestartować urządzenie?";
+/*Alert_Tweak_Injection_Toggled_Reboot_Now*/
+/*Alert_Tweak_Injection_Toggled_Reboot_Later*/
+"Alert_Remove_Jailbreak_Title" = "Usuń jailbreak";
+"Alert_Remove_Jailbreak_Pressed_Body" = "Usunięcie jailbreak spowoduje usunięcie wszystkich plików związanych z jailbreakiem, ale wszystkie zwykłe aplikacje, pliki i dane zostaną zachowane. Jesteś pewien, że chcesz kontynuować? Tej czynności nie można cofnąć.";
+/*Alert_Remove_Jailbreak_Enabled_Body*/
+/*Alert_Change_Mobile_Password_Body*/
+/*Password_Placeholder*/
+/*Repeat_Password_Placeholder*/
+/*Button_Change*/
+"Button_Cancel" = "Anuluj";
+/*Button_Continue*/
 
-"Popup_Change_Mobile_Password_Title" = "Zmień hasło do telefonu";
+// Duplicate Apps Errors
+/*Duplicate_Apps_Error_Dopamine_App*/
+/*Duplicate_Apps_Error_User_App*/
+/*Duplicate_Apps_Error_Icon_Cache*/
 
-"Settings_Remove_Jailbreak_Alert_Body" = "Usunięcie jailbreak spowoduje usunięcie wszystkich plików związanych z jailbreakiem, ale wszystkie zwykłe aplikacje, pliki i dane zostaną zachowane. Jesteś pewien, że chcesz kontynuować? Tej czynności nie można cofnąć.";
+// Settings Lists
+/*Theme*/
+/*Kernel Exploit*/
+/*PPL Bypass*/
+/*PAC Bypass*/
+/*None*/
+/*Recommended*/
 
-"Settings_Remove_Jailbreak_Alert_Title" = "Usuń Jailbreak";
+// Credits
+"Credits_Button_Discord" = "Discord";
+"Credits_Button_License" = "Licencja";
+"Credits_Button_Source_Code" = "Kod źródłowy";
 
-"Settings_Tweak_Injection_Toggled_Alert_Title" = "Ponowne uruchomienie userspace wymagane";
+// Logs
+"Initializing Environment" = "Inicjowanie Środowiska";
+/*Initializing Protection*/
+/*Loading BaseBin TrustCache*/
+/*Applying Bind Mount*/
+/*Removing Jailbreak*/
+/*Elevating Privileges*/
+/*Cleaning Up Exploits*/
+/*Building Phys R/W Primitive*/
+/*Rebooting Userspace*/
+"Patchfinding" = "Patchfinding";
+/*Exploiting Kernel (%@)*/
+/*Bypassing PAC (%@)*/
+/*Bypassing PPL (%@)*/
 
-"Select_Package_Managers_Install_Message" = "If you are unsure which one to select, select Sileo";
+// Package Manager selection
+"Status_Title_Select_Package_Managers" = "Wybierz menedżer(y) pakietów";
+"Select_Package_Managers_Install_Message" = "Jeżeli nie jesteś pewien który wybrać, wybierz Sileo";
+"Continue" = "Kontynuuj";
 
-"Select_Package_Managers_Reinstall_Message" = "Select package managers to reinstall";
-
-"Reinstall" = "Reinstall";
-
-"Continue" = "Continue";
-
-"Close" = "Close";
-
-"Title_Mismatching_Environment_Version" = "Mismatching Environment Version";
-
-"Mismatching_Environment_Version_Update_Body" = "The environment version this device was jailbroken with (%@) mismatches the currently installed app version (%@)\nPressing update will update the jailbreak environment to the one of the currently installed app, your device will userspace reboot afterwards.";

@@ -8,7 +8,7 @@
 import Foundation
 import iDownload
 
-jbdInitPPLRW();
+jbclient_initialize_primitives()
 
 do {
     try iDownload.launch_iDownload(krw: iDownloadKRW(), otherCmds: iDownloadCmds)

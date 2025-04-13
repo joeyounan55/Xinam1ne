@@ -11,6 +11,8 @@
 		8C69A22E2A320CCC007E401C /* iDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 8C69A22D2A320CCC007E401C /* iDownload */; };
 		8C69A2302A320E71007E401C /* iDownloadKRW.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C69A22F2A320E71007E401C /* iDownloadKRW.swift */; };
 		8C69A23F2A32239B007E401C /* iDownloadCmds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C69A23E2A32239B007E401C /* iDownloadCmds.swift */; };
+		8CE664652B61DF0200D7895C /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = 8CE664642B61DF0200D7895C /* shim.c */; };
+		8CE664672B61E36200D7895C /* libjailbreak.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CE664662B61E36200D7895C /* libjailbreak.dylib */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,9 +31,10 @@
 		8C69A2222A320BBE007E401C /* idownloadd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = idownloadd; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C69A2252A320BBE007E401C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8C69A22F2A320E71007E401C /* iDownloadKRW.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iDownloadKRW.swift; sourceTree = "<group>"; };
-		8C69A2322A320F8A007E401C /* libjailbreak.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjailbreak.dylib; path = ../../libjailbreak/libjailbreak.dylib; sourceTree = "<group>"; };
 		8C69A23D2A321337007E401C /* idownloadd-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "idownloadd-Bridging-Header.h"; sourceTree = "<group>"; };
 		8C69A23E2A32239B007E401C /* iDownloadCmds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iDownloadCmds.swift; sourceTree = "<group>"; };
+		8CE664642B61DF0200D7895C /* shim.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = shim.c; sourceTree = "<group>"; };
+		8CE664662B61E36200D7895C /* libjailbreak.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjailbreak.dylib; path = ../../.build/libjailbreak.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CE664672B61E36200D7895C /* libjailbreak.dylib in Frameworks */,
 				8C69A22E2A320CCC007E401C /* iDownload in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -70,6 +74,7 @@
 				8C69A22F2A320E71007E401C /* iDownloadKRW.swift */,
 				8C69A23E2A32239B007E401C /* iDownloadCmds.swift */,
 				8C69A23D2A321337007E401C /* idownloadd-Bridging-Header.h */,
+				8CE664642B61DF0200D7895C /* shim.c */,
 			);
 			path = idownloadd;
 			sourceTree = "<group>";
@@ -77,7 +82,7 @@
 		8C69A2312A320F8A007E401C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8C69A2322A320F8A007E401C /* libjailbreak.dylib */,
+				8CE664662B61E36200D7895C /* libjailbreak.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CE664652B61DF0200D7895C /* shim.c in Sources */,
 				8C69A2302A320E71007E401C /* iDownloadKRW.swift in Sources */,
 				8C69A2262A320BBE007E401C /* main.swift in Sources */,
 				8C69A23F2A32239B007E401C /* iDownloadCmds.swift in Sources */,
@@ -277,12 +283,9 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				HEADER_SEARCH_PATHS = ../../_shared;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../.include";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../.build";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				OTHER_LDFLAGS = (
-					"-L../../libjailbreak",
-					"-ljailbreak",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -298,12 +301,9 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				HEADER_SEARCH_PATHS = ../../_shared;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../.include";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../.build";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				OTHER_LDFLAGS = (
-					"-L../../libjailbreak",
-					"-ljailbreak",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";

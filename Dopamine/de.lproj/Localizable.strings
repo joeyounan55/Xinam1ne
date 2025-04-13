@@ -1,159 +1,117 @@
-"Bootstrapping" = "Bootstrappen";
-
-"Button_Cancel" = "Abbrechen";
-
-"Button_Hide_Jailbreak" = "Jailbreak verstecken";
-
-"Button_Hide_Logs_Title" = "Logs ausblenden";
-
-"Button_Jailbreak_Title" = "Jailbreak";
-
-"Button_Remove_Jailbreak" = "Jailbreak entfernen";
-
-"Button_Set_Mobile_Password" = "Mobile Passwort setzen";
-
-"Popup_Change_Mobile_Password_Message" = "Setze das Mobile-Passwort deines Gerätes, dieses Passwort kann auch für Root Zugriff via \"sudo\" benutzt werden. Um das Root-Passwort zu ändern, kann in einer Mobile-Shell der Befehl \"sudo passwd root\" ausgeführt werden.";
-
-"Button_Reinstall_Package_Managers" = "Packet-Manager neuinstallieren";
-
-"Button_Set" = "Setzen";
-
-"Button_Show_Logs_Title" = "Logs anzeigen";
-
-"Button_Unhide_Jailbreak" = "Jailbreak wieder anzeigen";
-
-"Button_Update" = "Aktualisieren";
-
-"Button_Update_Available" = "Aktualisierung verfügbar";
-
-"Button_Update_Environment" = "Umgebung aktualisieren";
-
-"Bypassing PAC" = "Umgehe PAC";
-
-"Bypassing PPL" = "Umgehe PPL";
-
-"Changelog_Unavailable_Text" = "Changelog nicht verfügbar";
-
-"Context_Menu_Copy_To_Clipboard" = "In die Zwischenablage kopieren";
-
-"Credits_Button_Discord" = "Discord";
-
-"Credits_Button_License" = "Lizenz";
-
-"Credits_Button_Source_Code" = "Quellcode";
-
-"Credits_Footer_Dopamine_Version %@\nOS:%@" = "Dopamine version %@\n%@";
-
-"Credits_Header_Special_Thanks" = "Besonderen Dank:";
-
 "Credits_Made_By" = "Von opa334, évelyne";
 
-"Credits_Made_By_Subheadline" = "UI von sourcelocation\nLogo und Symbol von xerus";
+// Log
+"Status_Title_Jailbreaking" = "Jailbreaken";
+"Log_Error" = "Erfolglos";
 
-"Finalizing Bootstrap" = "Bootstrap fertigstellen";
+// Jailbreak Button
+"Button_Jailbreak_Title" = "Jailbreak";
+"Status_Title_Jailbroken" = "Gejailbreakt";
+"Unsupported" = "Nicht unterstützt";
 
-"Gaining r/w" = "Erhalte Kernel Lese- und Schreiberechte";
-
-"Hint_Hide_Jailbreak" = "\"Jailbreak verstecken\" entfernt die Jailbreak Dateien temporär bis zum nächsten Jailbreak";
-
-"Hint_Hide_Jailbreak_Jailbroken" = "\"Jailbreak verstecken\" deaktiviert den Jailbreak teilweise und versucht das Erkennen des Jailbreaks zu erschweren. Es ist allerdings nicht 100% effektiv und verbirgt aktuell nicht alles.";
-
-"Initializing Environment" = "Initialisiere Umgebung";
-
-"Initializing System Hook" = "Initialisiere System Hook";
-
-"Jailbreak_Done" = "Fertig!";
-
-"Launching kexploitd" = "Starte kexploitd";
-
-"Enabling Wi-Fi" = "Aktiviere Wi-Fi";
-
-"Disabling Wi-Fi" = "Deaktiviere Wi-Fi";
-
-"Launching oobPCI" = "Starte oobPCI";
-
-"Loading Basebin Trustcache" = "Lade Basebin Trustcache";
-
+// Action Menu
+"Menu_Settings_Title" = "Einstellungen";
+"Menu_Restart_SpringBoard_Title" = "SpringBoard neustarten";
+"Menu_Reboot_Userspace_Title" = "Userspace-Neustart";
 "Menu_Credits_Title" = "Über";
 
-"Menu_Settings_Title" = "Einstellungen";
+// Updating
+"Button_Update" = "Aktualisieren";
+"Button_Update_Available" = "Aktualisierung verfügbar";
+"Button_Update_Environment" = "Umgebung aktualisieren";
 
-"Menu_Reboot_Userspace_Title" = "Userspace-Neustart";
-
-"Menu_Restart_SpringBoard_Title" = "SpringBoard neustarten";
-
-"Settings_iDownload" = "iDownload (Entwickler-Terminal)";
-
-"Settings_Tweak_Injection" = "Tweaks laden";
-
-"Settings_Verbose_Logs" = "Detaillierte Logs";
-
-"Settings_Should_Xinamine" = "Aktivieren Sie Xinamine";
-
-"Patchfinding" = "Finde Patches";
-
-"PM_Reinstall_Done_Text" = "Die ausgewählten Packet-Manager wurden neuinstalliert";
-
-"Rebuilding TrustCache" = "Baue TrustCache neu auf";
-
-"Refreshing Icon Cache" = "Frische App-Cache auf";
-
-"Settings_Footer_Device_Bootstrapped" = "Gerät gebootstrapped";
-
-"Settings_Footer_Device_Not_Bootstrapped" = "Gerät ist nicht gebootstrapped";
-
-"Starting jailbreakd" = "Starte jailbreakd";
-
-"Starting Launch Daemons" = "Starte Hintergrunddienste";
-
-"Status_Title_Jailbreaking" = "Jailbreaken";
-
-"Status_Title_Jailbroken" = "Gejailbreakt";
-
-"Status_Title_Select_Package_Managers" = "Paket Manager auswählen";
-
-"Status_Title_Unsuccessful" = "Erfolglos";
-
-"Success_Rate %@%% (%lld/%lld)" = "Erfolgsquote: %@%% (%lld/%lld)";
-
-"Title_Changelog" = "Changelog";
-
-"Title_Made_By" = "von opa334, évelyne\nUI von sourceloc\nBasiert auf Fugu15";
-
-"Title_Supported_iOS_Versions" = "iOS 15.0 - 15.4.1 | A12 - A15, M1";
-
-"Update_Log_Hint_Scrollable" = "Die Protokollansicht ist durchscrollbar";
-
+// Update View
 "Update_Status_Downloading" = "Lade Aktualisierung herunter...";
-
-"Update_Status_Installing" = "Installiere Aktualisierung...";
-
 "Update_Status_Subtitle_Please_Wait" = "Bitte warte, bis die Dateien heruntergeladen wurden";
-
+"Update_Status_Installing" = "Installiere Aktualisierung...";
 "Update_Status_Subtitle_Restart_Soon" = "Das Gerät wird bald neustarten";
+"Title_Changelog" = "Changelog";
+"Changelog_Unavailable_Text" = "Changelog nicht verfügbar";
 
-"Alert_Button_Uninstall" = "Deinstallieren";
+// Removed Jailbreak Alert
+"Removed_Jailbreak_Alert_Title" = "Jailbreak entfernt";
+"Removed_Jailbreak_Alert_Message" = "Der Jailbreak wurde erfolgreich entfernt. Eine Geräte-Neustart wird empfohlen.";
+"Button_Close" = "Schließen";
 
+// Error View
+"Button_Share" = "Teilen";
+"Button_Reboot" = "Neustarten";
+
+// Settings Toggles
+"Settings_Tweak_Injection" = "Tweaks laden";
+"Settings_iDownload" = "iDownload (Entwickler-Terminal)";
+"Settings_Verbose_Logs" = "Detaillierte Logs";
+"Settings_Apps_JIT" = "Erlaube JIT in Apps";
+"Settings_Allow_Old_arm64e_ABI_Libraries" = "Erlaube veraltete arm64e ABI";
+"Settings_Jetsam_Multiplier" = "Jetsam Multiplikator";
+
+// Settings Buttons
+"Button_Remove_Jailbreak" = "Jailbreak entfernen";
+"Button_Hide_Jailbreak" = "Jailbreak verstecken";
+"Button_Unhide_Jailbreak" = "Jailbreak wieder anzeigen";
+"Button_Refresh_Jailbreak_Apps" = "Jailbreak Apps erneuern";
+"Button_Reinstall_Package_Managers" = "Packet-Manager neuinstallieren";
+"Button_Change_Mobile_Password" = "\"mobile\" Passwort ändern";
+
+// Settings Hints
+"Hint_Hide_Jailbreak" = "\"Jailbreak verstecken\" entfernt die Jailbreak Dateien temporär bis zum nächsten Jailbreak";
+"Hint_Hide_Jailbreak_Jailbroken" = "\"Jailbreak verstecken\" deaktiviert den Jailbreak teilweise und versucht das Erkennen des Jailbreaks zu erschweren. Es ist allerdings nicht 100% effektiv und verbirgt aktuell nicht alles.";
+"Section_Jailbreak_Settings" = "Jailbreak Einstellungen";
+"Section_Actions" = "Aktionen";
+"Section_Customization" = "Design";
+"Section_Exploits" = "Exploits";
+"Jetsam_Description" = "Jetsam ist ein System-Feature, welches Prozesse, die vorgegebene Speicherlimit überschreiten, automatisch beendet. Wenn viele Tweaks installiert wurden, kann es passieren, dass Prozesse direkt nach dem Start beendet werden, was diese in eine Absturzschleife versetzen kann. Hier kann ein Multiplikator gewählt werden, mit welchem jedes Speicherlimit, das vom System gesetzt wird, multipliziert wird. Erhöhe diese Einstellung, falls unterwünschtes Systemverhalten bei einer hohen Anzahl von installierten Tweaks auftritt. Um den Speicherverbrauch des Systems nicht negativ zu beeinflussen, wird empfohlen die kleinstmögliche Einstellung zu wählen, unter welcher das System stabil läuft.";
+
+// Settings Alerts
+"Alert_Tweak_Injection_Toggled_Title" = "Userspace-Neustart erforderlich";
 "Alert_Tweak_Injection_Toggled_Body" = "Um die Änderungen anzuwenden ist ein Userspace-Neustart erforderlich, soll dieser jetzt durchgeführt werden?";
+"Alert_Tweak_Injection_Toggled_Reboot_Now" = "Jetzt neustarten";
+"Alert_Tweak_Injection_Toggled_Reboot_Later" = "Später neustarten";
+"Alert_Remove_Jailbreak_Title" = "Jailbreak entfernen";
+"Alert_Remove_Jailbreak_Pressed_Body" = "Das Entfernen des Jailbreaks wird alle mit dem Jailbreak zusammenhängenden Dateien löschen, alle regulären Apps, Dateien und Daten bleiben erhalten. Diese Aktion kann nicht rückgangig gemacht werden, bist du sicher?";
+"Alert_Remove_Jailbreak_Enabled_Body" = "Das Aktivieren von \"Jailbreak entfernen\" wird beim nächsten Jailbreak alle mit dem Jailbreak zusammenhängenden Dateien löschen, alle regulären Apps, Dateien und Daten bleiben erhalten. Diese Aktion kann nicht rückgangig gemacht werden, bist du sicher?";
+"Alert_Change_Mobile_Password_Body" = "Setzte das Passwort des \"mobile\" Benutzers von deinem Gerät, dieses Passwort kann ebenfalls für Root-Zugriff via sudo verwendet werden. Um das Root-Passwort zu setzen kann der Befehl \"sudo passwd root\" innerhalb einer mobile-Shell verwendet werden.";
+"Password_Placeholder" = "Passwort";
+"Repeat_Password_Placeholder" = "Passwort wiederholen";
+"Button_Change" = "Ändern";
+"Button_Cancel" = "Abbrechen";
+"Button_Continue" = "Weiter";
 
-"Popup_Change_Mobile_Password_Title" = "Mobile Passwort ändern";
+// Duplicate Apps Errors
+"Duplicate_Apps_Error_Dopamine_App" = "Es existieren mehrere Apps mit unter der Kennung \"%@\" in Dopamines App-Ordner (\"%@\"). Fortfahren des Jailbreaks nicht möglich.";
+"Duplicate_Apps_Error_User_App" = "Die Apps mit der Kennung %@ existieren in Dopamines App-Ordner (\"%@\"), sind aber separat ebenfalls auf dem System installiert. Fortfahren des Jailbreaks nicht möglich.";
+"Duplicate_Apps_Error_Icon_Cache" = "Die App mit der Kennung \"%@\" existiert in Dopamines App-Ordner (\"%@\") aber ist ebenfalls im Icon-Cache unter einem anderen Pfad (\"%@\") registriert. Fortfahren des Jailbreaks nicht möglich.";
 
-"Settings_Remove_Jailbreak_Alert_Body" = "Das Entfernen des Jailbreaks wird alle mit dem Jailbreak zusammenhängenden Dateien löschen, alle regulären Apps, Datein und Daten bleiben erhalten. Diese Aktion kann nicht rückgangig gemacht werden, bist du sicher?";
+// Settings Lists
+"Theme" = "Farbschema";
+"Kernel Exploit" = "Kernel Exploit";
+"PPL Bypass" = "PPL Bypass";
+"PAC Bypass" = "PAC Bypass";
+"None" = "Keiner";
+"Recommended" = "Empfohlen";
 
-"Settings_Remove_Jailbreak_Alert_Title" = "Jailbreak entfernen";
+// Credits
+"Credits_Button_Discord" = "Discord";
+"Credits_Button_License" = "Lizenz";
+"Credits_Button_Source_Code" = "Quellcode";
 
-"Settings_Tweak_Injection_Toggled_Alert_Title" = "Userspace-Reboot notwendig";
+// Logs
+"Initializing Environment" = "Initialisiere Umgebung";
+"Initializing Protection" = "Initialisiere Schutz";
+"Loading BaseBin TrustCache" = "Lade BaseBin TrustCache";
+"Applying Bind Mount" = "Wende Bind Mount an";
+"Removing Jailbreak" = "Entferne Jailbreak";
+"Elevating Privileges" = "Erhöhe Berechtigungen";
+"Cleaning Up Exploits" = "Räume Exploits auf";
+"Building Phys R/W Primitive" = "Baue Phys R/W Primitive";
+"Rebooting Userspace" = "Reboote Userspace";
+"Patchfinding" = "Finde Patches";
+"Exploiting Kernel (%@)" = "Exploite Kernel (%@)";
+"Bypassing PAC (%@)" = "Umgehe PAC (%@)";
+"Bypassing PPL (%@)" = "Umgehe PPL (%@)";
 
+// Package Manager selection
+"Status_Title_Select_Package_Managers" = "Paket Manager auswählen";
 "Select_Package_Managers_Install_Message" = "Bei Unklarheiten, wähle Sileo aus";
-
-"Select_Package_Managers_Reinstall_Message" = "Wähle die Paket-Manager, welche neuinstalliert werden sollen";
-
-"Reinstall" = "Neuinstallieren";
-
 "Continue" = "Fortsetzen";
 
-"Close" = "Schließen";
-
-"Title_Mismatching_Environment_Version" = "Umgebungsversion nicht übereinstimmend";
-
-"Mismatching_Environment_Version_Update_Body" = "Die Version der Umgebung mit der dieses Gerät gejailbreakt wurde (%@) stimmt nicht mit der aktuell installierten App Version (%@) überein.\nDie Update-Option wird die Jailbreak Umgebung auf die Version aktualisieren, die in der aktuell installierten App enthalten ist. Danach führt das Gerät einen Userspace-Neustart durch.";

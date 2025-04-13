@@ -9,28 +9,11 @@
 #include <sys/stat.h>
 #include <dlfcn.h>
 #include "envbuf.h"
+#include "private.h"
+#include <libjailbreak/jbclient_xpc.h>
+#include <libjailbreak/jbserver_domains.h>
 
-#define POSIX_SPAWN_PROC_TYPE_DRIVER 0x700
-int posix_spawnattr_getprocesstype_np(const posix_spawnattr_t * __restrict, int * __restrict) __API_AVAILABLE(macos(10.8), ios(6.0));
-
-char *JB_SandboxExtensions = NULL;
-char *JB_RootPath = NULL;
-
-#define JBD_MSG_SETUID_FIX 21
-#define JBD_MSG_PROCESS_BINARY 22
-#define JBD_MSG_DEBUG_ME 24
-#define JBD_MSG_FORK_FIX 25
-#define JBD_MSG_INTERCEPT_USERSPACE_PANIC 26
-
-#define JETSAM_MULTIPLIER 3
-#define XPC_TIMEOUT 0.1 * NSEC_PER_SEC
-
-#define POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE 0x48
-#define POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE 0x4C
-
-bool swh_is_debugged = false;
-
-bool stringStartsWith(const char *str, const char* prefix)
+bool string_has_prefix(const char *str, const char* prefix)
 {
 	if (!str || !prefix) {
 		return false;
@@ -46,7 +29,7 @@ bool stringStartsWith(const char *str, const char* prefix)
 	return !strncmp(str, prefix, prefix_len);
 }
 
-bool stringEndsWith(const char* str, const char* suffix)
+bool string_has_suffix(const char* str, const char* suffix)
 {
 	if (!str || !suffix) {
 		return false;
@@ -62,399 +45,92 @@ bool stringEndsWith(const char* str, const char* suffix)
 	return !strcmp(str + str_len - suffix_len, suffix);
 }
 
-extern char **environ;
-kern_return_t bootstrap_look_up(mach_port_t port, const char *service, mach_port_t *server_port);
-
-bool jbdSystemWideIsReachable(void)
+void string_enumerate_components(const char *string, const char *separator, void (^enumBlock)(const char *pathString, bool *stop))
 {
-	int sbc = sandbox_check(getpid(), "mach-lookup", SANDBOX_FILTER_GLOBAL_NAME | SANDBOX_CHECK_NO_REPORT, "com.opa334.jailbreakd.systemwide");
-	return sbc == 0;
-}
-
-mach_port_t jbdSystemWideMachPort(void)
-{
-	mach_port_t outPort = MACH_PORT_NULL;
-	kern_return_t kr = KERN_SUCCESS;
-
-	if (getpid() == 1) {
-		mach_port_t self_host = mach_host_self();
-		kr = host_get_special_port(self_host, HOST_LOCAL_NODE, 16, &outPort);
-		mach_port_deallocate(mach_task_self(), self_host);
-	}
-	else {
-		kr = bootstrap_look_up(bootstrap_port, "com.opa334.jailbreakd.systemwide", &outPort);
-	}
-
-	if (kr != KERN_SUCCESS) return MACH_PORT_NULL;
-	return outPort;
-}
-
-xpc_object_t sendLaunchdMessageFallback(xpc_object_t xdict)
-{
-	xpc_dictionary_set_bool(xdict, "jailbreak", true);
-	xpc_dictionary_set_bool(xdict, "jailbreak-systemwide", true);
-
-	void* pipePtr = NULL;
-	if(_os_alloc_once_table[1].once == -1)
-	{
-		pipePtr = _os_alloc_once_table[1].ptr;
-	}
-	else
-	{
-		pipePtr = _os_alloc_once(&_os_alloc_once_table[1], 472, NULL);
-		if (!pipePtr) _os_alloc_once_table[1].once = -1;
-	}
-
-	xpc_object_t xreply = nil;
-	if (pipePtr) {
-		struct xpc_global_data* globalData = pipePtr;
-		xpc_object_t pipe = globalData->xpc_bootstrap_pipe;
-		if (pipe) {
-			int err = xpc_pipe_routine_with_flags(pipe, xdict, &xreply, 0);
-			if (err != 0) {
-				return nil;
-			}
-		}
-	}
-	return xreply;
-}
-
-xpc_object_t sendJBDMessageSystemWide(xpc_object_t xdict)
-{
-	xpc_object_t jbd_xreply = nil;
-	if (jbdSystemWideIsReachable()) {
-		mach_port_t jbdPort = jbdSystemWideMachPort();
-		if (jbdPort != -1) {
-			xpc_object_t pipe = xpc_pipe_create_from_port(jbdPort, 0);
-			if (pipe) {
-				int err = xpc_pipe_routine(pipe, xdict, &jbd_xreply);
-				if (err != 0) jbd_xreply = nil;
-				xpc_release(pipe);
-			}
-			mach_port_deallocate(mach_task_self(), jbdPort);
-		}
-	}
-
-	if (!jbd_xreply && getpid() != 1) {
-		return sendLaunchdMessageFallback(xdict);
-	}
-
-	return jbd_xreply;
-}
-
-int64_t jbdswFixSetuid(void)
-{
-	xpc_object_t message = xpc_dictionary_create_empty();
-	xpc_dictionary_set_uint64(message, "id", JBD_MSG_SETUID_FIX);
-	xpc_object_t reply = sendJBDMessageSystemWide(message);
-	int64_t result = -1;
-	if (reply) {
-		result  = xpc_dictionary_get_int64(reply, "result");
-		xpc_release(reply);
-	}
-	return result;
-}
-
-int64_t jbdswProcessBinary(const char *filePath)
-{
-	// if file doesn't exist, bail out
-	if (access(filePath, F_OK) != 0) return 0;
-
-	// if file is on rootfs mount point, it doesn't need to be
-	// processed as it's guaranteed to be in static trust cache
-	// same goes for our /usr/lib bind mount (which is guaranteed to be in dynamic trust cache)
-	struct statfs fs;
-	int sfsret = statfs(filePath, &fs);
-	if (sfsret == 0) {
-		if (!strcmp(fs.f_mntonname, "/") || !strcmp(fs.f_mntonname, "/usr/lib")) return -1;
-	}
-
-	char absolutePath[PATH_MAX];
-	if (realpath(filePath, absolutePath) == NULL) return -1;
-
-	xpc_object_t message = xpc_dictionary_create_empty();
-	xpc_dictionary_set_uint64(message, "id", JBD_MSG_PROCESS_BINARY);
-	xpc_dictionary_set_string(message, "filePath", absolutePath);
-
-	xpc_object_t reply = sendJBDMessageSystemWide(message);
-	int64_t result = -1;
-	if (reply) {
-		result  = xpc_dictionary_get_int64(reply, "result");
-		xpc_release(reply);
-	}
-	return result;
-}
-
-int64_t jbdswProcessLibrary(const char *filePath)
-{
-	if (_dyld_shared_cache_contains_path(filePath)) return 0;
-	return jbdswProcessBinary(filePath);
-}
-
-int64_t jbdswDebugMe(void)
-{
-	if (swh_is_debugged) return 0;
-	xpc_object_t message = xpc_dictionary_create_empty();
-	xpc_dictionary_set_uint64(message, "id", JBD_MSG_DEBUG_ME);
-	xpc_object_t reply = sendJBDMessageSystemWide(message);
-	int64_t result = -1;
-	if (reply) {
-		result  = xpc_dictionary_get_int64(reply, "result");
-		xpc_release(reply);
-	}
-	if (result == 0) {
-		swh_is_debugged = true;
-	} 
-	return result;
-}
-
-int64_t jbdswForkFix(pid_t childPid)
-{
-	xpc_object_t message = xpc_dictionary_create_empty();
-	xpc_dictionary_set_uint64(message, "id", JBD_MSG_FORK_FIX);
-	xpc_dictionary_set_int64(message, "childPid", childPid);
-	xpc_object_t reply = sendJBDMessageSystemWide(message);
-	int64_t result = -1;
-	if (reply) {
-		result  = xpc_dictionary_get_int64(reply, "result");
-		xpc_release(reply);
-	}
-	return result;
-}
-
-int64_t jbdswInterceptUserspacePanic(const char *messageString)
-{
-	xpc_object_t message = xpc_dictionary_create_empty();
-	xpc_dictionary_set_uint64(message, "id", JBD_MSG_INTERCEPT_USERSPACE_PANIC);
-	xpc_dictionary_set_string(message, "message", messageString);
-	xpc_object_t reply = sendJBDMessageSystemWide(message);
-	int64_t result = -1;
-	if (reply) {
-		result  = xpc_dictionary_get_int64(reply, "result");
-		xpc_release(reply);
-	}
-	return result;
-}
-
-// Derived from posix_spawnp in Apple libc
-int resolvePath(const char *file, const char *searchPath, int (^attemptHandler)(char *path))
-{
-	const char *env_path;
-	char *bp;
-	char *cur;
-	char *p;
-	char **memp;
-	int lp;
-	int ln;
-	int cnt;
-	int err = 0;
-	int eacces = 0;
-	struct stat sb;
-	char path_buf[PATH_MAX];
-
-	env_path = searchPath;
-	if (!env_path) {
-		env_path = getenv("PATH");
-		if (!env_path) {
-			env_path = _PATH_DEFPATH;
-		}
-	}
-
-	/* If it's an absolute or relative path name, it's easy. */
-	if (index(file, '/')) {
-		bp = (char *)file;
-		cur = NULL;
-		goto retry;
-	}
-	bp = path_buf;
-
-	/* If it's an empty path name, fail in the usual POSIX way. */
-	if (*file == '\0')
-		return (ENOENT);
-
-	if ((cur = alloca(strlen(env_path) + 1)) == NULL)
-		return ENOMEM;
-	strcpy(cur, env_path);
-	while ((p = strsep(&cur, ":")) != NULL) {
-		/*
-		 * It's a SHELL path -- double, leading and trailing colons
-		 * mean the current directory.
-		 */
-		if (*p == '\0') {
-			p = ".";
-			lp = 1;
-		} else {
-			lp = strlen(p);
-		}
-		ln = strlen(file);
-
-		/*
-		 * If the path is too long complain.  This is a possible
-		 * security issue; given a way to make the path too long
-		 * the user may spawn the wrong program.
-		 */
-		if (lp + ln + 2 > sizeof(path_buf)) {
-			err = ENAMETOOLONG;
-			goto done;
-		}
-		bcopy(p, path_buf, lp);
-		path_buf[lp] = '/';
-		bcopy(file, path_buf + lp + 1, ln);
-		path_buf[lp + ln + 1] = '\0';
-
-retry:		err = attemptHandler(bp);
-		switch (err) {
-		case E2BIG:
-		case ENOMEM:
-		case ETXTBSY:
-			goto done;
-		case ELOOP:
-		case ENAMETOOLONG:
-		case ENOENT:
-		case ENOTDIR:
-			break;
-		case ENOEXEC:
-			goto done;
-		default:
-			/*
-			 * EACCES may be for an inaccessible directory or
-			 * a non-executable file.  Call stat() to decide
-			 * which.  This also handles ambiguities for EFAULT
-			 * and EIO, and undocumented errors like ESTALE.
-			 * We hope that the race for a stat() is unimportant.
-			 */
-			if (stat(bp, &sb) != 0)
-				break;
-			if (err == EACCES) {
-				eacces = 1;
-				continue;
-			}
-			goto done;
-		}
-	}
-	if (eacces)
-		err = EACCES;
-	else
-		err = ENOENT;
-done:
-	return (err);
-}
-
-void enumeratePathString(const char *pathsString, void (^enumBlock)(const char *pathString, bool *stop))
-{
-	char *pathsCopy = strdup(pathsString);
-	char *pathString = strtok(pathsCopy, ":");
-	while (pathString != NULL) {
+	char *stringCopy = strdup(string);
+	char *curString = strtok(stringCopy, separator);
+	while (curString != NULL) {
 		bool stop = false;
-		enumBlock(pathString, &stop);
+		enumBlock(curString, &stop);
 		if (stop) break;
-		pathString = strtok(NULL, ":");
+		curString = strtok(NULL, separator);
 	}
-	free(pathsCopy);
+	free(stringCopy);
 }
 
-typedef enum 
+static kSpawnConfig spawn_config_for_executable(const char* path, char *const argv[restrict])
 {
-	kBinaryConfigDontInject = 1 << 0,
-	kBinaryConfigDontProcess = 1 << 1
-} kBinaryConfig;
-
-kBinaryConfig configForBinary(const char* path, char *const argv[restrict])
-{
-	// Don't do anything for jailbreakd because this wanting to launch implies it's not running currently
-	if (stringEndsWith(path, "/jailbreakd")) {
-		return (kBinaryConfigDontInject | kBinaryConfigDontProcess);
-	}
-
-	if (!strcmp(path, "/usr/libexec/xpcproxy")) {
-		if (argv) {
-			if (argv[0]) {
-				if (argv[1]) {
-					if (!strcmp(argv[1], "com.opa334.jailbreakd")) {
-						// Don't do anything for xpcproxy if it's called on jailbreakd because this also implies jbd is not running currently
-						return (kBinaryConfigDontInject | kBinaryConfigDontProcess);
-					}
-					else if (!strcmp(argv[1], "com.apple.ReportCrash")) {
-						// Skip ReportCrash too as it might need to execute while jailbreakd is in a crashed state
-						return (kBinaryConfigDontInject | kBinaryConfigDontProcess);
-					}
-					else if (!strcmp(argv[1], "com.apple.ReportMemoryException")) {
-						// Skip ReportMemoryException too as it might need to execute while jailbreakd is in a crashed state
-						return (kBinaryConfigDontInject | kBinaryConfigDontProcess);
-					}
-				}
-			}
-		}
-	}
-
 	// Blacklist to ensure general system stability
 	// I don't like this but for some processes it seems neccessary
 	const char *processBlacklist[] = {
 		"/System/Library/Frameworks/GSS.framework/Helpers/GSSCred",
+		"/System/Library/PrivateFrameworks/DataAccess.framework/Support/dataaccessd",
 		"/System/Library/PrivateFrameworks/IDSBlastDoorSupport.framework/XPCServices/IDSBlastDoorService.xpc/IDSBlastDoorService",
 		"/System/Library/PrivateFrameworks/MessagesBlastDoorSupport.framework/XPCServices/MessagesBlastDoorService.xpc/MessagesBlastDoorService",
-		"/usr/sbin/wifid"
 	};
 	size_t blacklistCount = sizeof(processBlacklist) / sizeof(processBlacklist[0]);
 	for (size_t i = 0; i < blacklistCount; i++)
 	{
-		if (!strcmp(processBlacklist[i], path)) return (kBinaryConfigDontInject | kBinaryConfigDontProcess);
+		if (!strcmp(processBlacklist[i], path)) return 0;
 	}
 
-	return 0;
+	return (kSpawnConfigInject | kSpawnConfigTrust);
 }
 
-// 1. Make sure the about to be spawned binary and all of it's dependencies are trust cached
-// 2. Insert "DYLD_INSERT_LIBRARIES=/usr/lib/systemhook.dylib" into all binaries spawned
-
-int spawn_hook_common(pid_t *restrict pid, const char *restrict path,
-					   const posix_spawn_file_actions_t *restrict file_actions,
-					   const posix_spawnattr_t *restrict attrp,
-					   char *const argv[restrict],
-					   char *const envp[restrict],
-					   void *orig)
+int __posix_spawn_orig(pid_t *restrict pid, const char *restrict path, struct _posix_spawn_args_desc *desc, char *const argv[restrict], char * const envp[restrict])
 {
-	int (*pspawn_orig)(pid_t *restrict, const char *restrict, const posix_spawn_file_actions_t *restrict, const posix_spawnattr_t *restrict, char *const[restrict], char *const[restrict]) = orig;
+	return syscall(SYS_posix_spawn, pid, path, desc, argv, envp);
+}
+
+int __execve_orig(const char *path, char *const argv[], char *const envp[])
+{
+	return syscall(SYS_execve, path, argv, envp);
+}
+
+// 1. Ensure the binary about to be spawned and all of it's dependencies are trust cached
+// 2. Insert "DYLD_INSERT_LIBRARIES=/usr/lib/systemhook.dylib" into all binaries spawned
+// 3. Increase Jetsam limit to more sane value (Multipler defined as JETSAM_MULTIPLIER)
+
+static int spawn_exec_hook_common(const char *path,
+								  char *const argv[restrict],
+								  char *const envp[restrict],
+			   struct _posix_spawn_args_desc *desc,
+										int (*trust_binary)(const char *path),
+									   double jetsamMultiplier,
+									    int (^orig)(char *const envp[restrict]))
+{
 	if (!path) {
-		return pspawn_orig(pid, path, file_actions, attrp, argv, envp);
+		return orig(envp);
 	}
 
-	kBinaryConfig binaryConfig = configForBinary(path, argv);
+	posix_spawnattr_t attr = NULL;
+	if (desc) attr = desc->attrp;
 
-	if (!(binaryConfig & kBinaryConfigDontProcess)) {
-		// jailbreakd: Upload binary to trustcache if needed
-		jbdswProcessBinary(path);
+	kSpawnConfig spawnConfig = spawn_config_for_executable(path, argv);
+
+	if (spawnConfig & kSpawnConfigTrust) {
+		// Upload binary to trustcache if needed
+		trust_binary(path);
 	}
 
 	const char *existingLibraryInserts = envbuf_getenv((const char **)envp, "DYLD_INSERT_LIBRARIES");
 	__block bool systemHookAlreadyInserted = false;
 	if (existingLibraryInserts) {
-		enumeratePathString(existingLibraryInserts, ^(const char *existingLibraryInsert, bool *stop) {
+		string_enumerate_components(existingLibraryInserts, ":", ^(const char *existingLibraryInsert, bool *stop) {
 			if (!strcmp(existingLibraryInsert, HOOK_DYLIB_PATH)) {
 				systemHookAlreadyInserted = true;
-			}
-			else {
-				jbdswProcessBinary(existingLibraryInsert);
 			}
 		});
 	}
 
 	int JBEnvAlreadyInsertedCount = (int)systemHookAlreadyInserted;
 
-	if (envbuf_getenv((const char **)envp, "JB_SANDBOX_EXTENSIONS")) {
-		JBEnvAlreadyInsertedCount++;
-	}
-
-	if (envbuf_getenv((const char **)envp, "JB_ROOT_PATH")) {
-		JBEnvAlreadyInsertedCount++;
-	}
-
 	// Check if we can find at least one reason to not insert jailbreak related environment variables
 	// In this case we also need to remove pre existing environment variables if they are already set
 	bool shouldInsertJBEnv = true;
 	bool hasSafeModeVariable = false;
 	do {
-		if (binaryConfig & kBinaryConfigDontInject) {
+		if (!(spawnConfig & kSpawnConfigInject)) {
 			shouldInsertJBEnv = false;
 			break;
 		}
@@ -478,9 +154,8 @@ int spawn_hook_common(pid_t *restrict pid, const char *restrict path,
 			}
 		}
 
-		if (attrp) {
-			int proctype = 0;
-			posix_spawnattr_getprocesstype_np(attrp, &proctype);
+		int proctype = 0;
+		if (posix_spawnattr_getprocesstype_np(&attr, &proctype) == 0) {
 			if (proctype == POSIX_SPAWN_PROC_TYPE_DRIVER) {
 				// Do not inject hook into DriverKit drivers
 				shouldInsertJBEnv = false;
@@ -495,26 +170,29 @@ int spawn_hook_common(pid_t *restrict pid, const char *restrict path,
 		}
 	} while (0);
 
-	// If systemhook is being injected and Jetsam limits are set, increase them by a factor of JETSAM_MULTIPLIER
+	// If systemhook is being injected and jetsam limits are set, increase them by a factor of jetsamMultiplier
 	if (shouldInsertJBEnv) {
-		if (attrp) {
-			uint8_t *attrStruct = *attrp;
-			if (attrStruct) {
+		uint8_t *attrStruct = (uint8_t *)attr;
+		if (attrStruct) {
+			if (jetsamMultiplier == 0 || isnan(jetsamMultiplier)) jetsamMultiplier = 3; // default value (3x)
+			if (jetsamMultiplier > 1) {
 				int memlimit_active = *(int*)(attrStruct + POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE);
 				if (memlimit_active != -1) {
-					*(int*)(attrStruct + POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE) = memlimit_active * JETSAM_MULTIPLIER;
+					*(int*)(attrStruct + POSIX_SPAWNATTR_OFF_MEMLIMIT_ACTIVE) = memlimit_active * jetsamMultiplier;
 				}
 				int memlimit_inactive = *(int*)(attrStruct + POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE);
 				if (memlimit_inactive != -1) {
-					*(int*)(attrStruct + POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE) = memlimit_inactive * JETSAM_MULTIPLIER;
+					*(int*)(attrStruct + POSIX_SPAWNATTR_OFF_MEMLIMIT_INACTIVE) = memlimit_inactive * jetsamMultiplier;
 				}
 			}
 		}
 	}
 
-	if ((shouldInsertJBEnv && JBEnvAlreadyInsertedCount == 3) || (!shouldInsertJBEnv && JBEnvAlreadyInsertedCount == 0 && !hasSafeModeVariable)) {
+	int r = -1;
+
+	if ((shouldInsertJBEnv && JBEnvAlreadyInsertedCount == 1) || (!shouldInsertJBEnv && JBEnvAlreadyInsertedCount == 0 && !hasSafeModeVariable)) {
 		// we're already good, just call orig
-		return pspawn_orig(pid, path, file_actions, attrp, argv, envp);
+		r = orig(envp);
 	}
 	else {
 		// the state we want to be in is not the state we are in right now
@@ -531,9 +209,6 @@ int spawn_hook_common(pid_t *restrict pid, const char *restrict path,
 				}
 				envbuf_setenv(&envc, "DYLD_INSERT_LIBRARIES", newLibraryInsert);
 			}
-
-			envbuf_setenv(&envc, "JB_SANDBOX_EXTENSIONS", JB_SandboxExtensions);
-			envbuf_setenv(&envc, "JB_ROOT_PATH", JB_RootPath);
 		}
 		else {
 			if (systemHookAlreadyInserted && existingLibraryInserts) {
@@ -545,7 +220,7 @@ int spawn_hook_common(pid_t *restrict pid, const char *restrict path,
 					newLibraryInsert[0] = '\0';
 
 					__block bool first = true;
-					enumeratePathString(existingLibraryInserts, ^(const char *existingLibraryInsert, bool *stop) {
+					string_enumerate_components(existingLibraryInserts, ":", ^(const char *existingLibraryInsert, bool *stop) {
 						if (strcmp(existingLibraryInsert, HOOK_DYLIB_PATH) != 0) {
 							if (first) {
 								strcpy(newLibraryInsert, existingLibraryInsert);
@@ -564,12 +239,59 @@ int spawn_hook_common(pid_t *restrict pid, const char *restrict path,
 			}
 			envbuf_unsetenv(&envc, "_SafeMode");
 			envbuf_unsetenv(&envc, "_MSSafeMode");
-			envbuf_unsetenv(&envc, "JB_SANDBOX_EXTENSIONS");
-			envbuf_unsetenv(&envc, "JB_ROOT_PATH");
 		}
 
-		int retval = pspawn_orig(pid, path, file_actions, attrp, argv, envc);
+		r = orig(envc);
+
 		envbuf_free(envc);
-		return retval;
 	}
+
+	return r;
+}
+
+int posix_spawn_hook_shared(pid_t *restrict pid, 
+					   const char *restrict path,
+			 struct _posix_spawn_args_desc *desc,
+						  	    char *const argv[restrict],
+					   			char *const envp[restrict],
+					   				  void *orig,
+					   				  int (*trust_binary)(const char *path),
+					   				  int (*set_process_debugged)(uint64_t pid, bool fullyDebugged),
+					   				 double jetsamMultiplier)
+{
+	int (*posix_spawn_orig)(pid_t *restrict, const char *restrict, struct _posix_spawn_args_desc *, char *const[restrict], char *const[restrict]) = orig;
+
+	int r = spawn_exec_hook_common(path, argv, envp, desc, trust_binary, jetsamMultiplier, ^int(char *const envp_patched[restrict]) {
+		return posix_spawn_orig(pid, path, desc, argv, envp_patched);
+	});
+
+	if (r == 0 && pid && desc) {
+		posix_spawnattr_t attr = desc->attrp;
+		short flags = 0;
+		if (posix_spawnattr_getflags(&attr, &flags) == 0) {
+			if (flags & POSIX_SPAWN_START_SUSPENDED) {
+				// If something spawns a process as suspended, ensure mapping invalid pages in it is possible
+				// Normally it would only be possible after systemhook.dylib enables it
+				// Fixes Frida issues
+				int r = set_process_debugged(*pid, false);
+			}
+		}
+	}
+
+	return r;
+}
+
+int execve_hook_shared(const char *path,
+					   char *const argv[],
+					   char *const envp[],
+			 				 void *orig,
+			 				 int (*trust_binary)(const char *path))
+{
+	int (*execve_orig)(const char *, char *const[], char *const[]) = orig;
+
+	int r = spawn_exec_hook_common(path, argv, envp, NULL, trust_binary, 0, ^int(char *const envp_patched[restrict]){
+		return execve_orig(path, argv, envp_patched);
+	});
+
+	return r;
 }
