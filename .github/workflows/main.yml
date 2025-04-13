@@ -35,18 +35,18 @@ jobs:
         with:
           packages: ldid findutils sed coreutils make
 
-      - name: Install System Dependencies
-        run: |
-          brew update
-          # Try installing choma from Homebrew if it exists (you can remove if it doesn't)
-          brew install choma || echo "choma not available via Homebrew"
-
-      - name: Clone choma (if not in Homebrew)
+      - name: Install System Dependencies and Fallback Choma
         run: |
           set -x
-          git clone https://github.com/opa334/choma.git
-          export CHOMA_INCLUDE="$(pwd)/choma/include"
-          echo "CHOMA_INCLUDE=${CHOMA_INCLUDE}" >> $GITHUB_ENV
+          brew update
+          if ! brew install choma; then
+            echo "choma not available via Homebrew, cloning manually..."
+            git clone https://github.com/opa334/choma.git
+            echo "CHOMA_INCLUDE=${PWD}/choma/include" >> $GITHUB_ENV
+          else
+            CHOMA_PATH="$(brew --prefix)/include/choma"
+            echo "CHOMA_INCLUDE=${CHOMA_PATH}" >> $GITHUB_ENV
+          fi
 
       - name: Install THEOS (without SDKs)
         run: |
@@ -84,6 +84,7 @@ jobs:
           export BASEDIR="$(pwd)"
           export THEOS="${BASEDIR}/theos"
           export CFLAGS="-I${CHOMA_INCLUDE} -I/usr/include/xpc"
+          export LDFLAGS="-framework XPC"
           chmod +x ./BaseBin/pack.sh
           gmake -j$(sysctl -n hw.physicalcpu)
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
