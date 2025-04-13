@@ -38,15 +38,18 @@ jobs:
       - name: Install System Dependencies
         run: |
           brew update
-          # Try installing choma from Homebrew if it exists (you can remove if it doesn't)
           brew install choma || echo "choma not available via Homebrew"
 
       - name: Clone choma (if not in Homebrew)
         run: |
           set -x
           git clone https://github.com/opa334/choma.git
-          export CHOMA_INCLUDE="$(pwd)/choma/include"
-          echo "CHOMA_INCLUDE=${CHOMA_INCLUDE}" >> $GITHUB_ENV
+          echo "CHOMA_INCLUDE=${GITHUB_WORKSPACE}/choma/include" >> $GITHUB_ENV
+
+      - name: Locate macOS SDK include path
+        run: |
+          export SDK_PATH="$(xcrun --sdk macosx --show-sdk-path)"
+          echo "SDK_INCLUDE=${SDK_PATH}/usr/include" >> $GITHUB_ENV
 
       - name: Install THEOS (without SDKs)
         run: |
@@ -83,7 +86,8 @@ jobs:
           sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
           export BASEDIR="$(pwd)"
           export THEOS="${BASEDIR}/theos"
-          export CFLAGS="-I${CHOMA_INCLUDE} -I/usr/include/xpc"
+          export CFLAGS="-I${CHOMA_INCLUDE} -I${SDK_INCLUDE}"
+          export CPPFLAGS="${CFLAGS}"
           chmod +x ./BaseBin/pack.sh
           gmake -j$(sysctl -n hw.physicalcpu)
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
