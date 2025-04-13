@@ -2,22 +2,18 @@ name: "Dopamine: build and upload"
 
 on:
   push:
-    branches:
-      - master
-    paths-ignore:
-      - ".gitignore"
+    branches: [master]
+    paths-ignore: [".gitignore"]
   pull_request:
-    branches:
-      - master
-    paths-ignore:
-      - ".gitignore"
+    branches: [master]
+    paths-ignore: [".gitignore"]
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 1 *'
-    - cron: '0 0 1 4 *'
-    - cron: '0 0 30 6 *'
-    - cron: '0 0 28 9 *'
-    - cron: '0 0 27 12 *'
+    - cron: '0 0 1 1 *'   # Jan 1
+    - cron: '0 0 1 4 *'   # Apr 1
+    - cron: '0 0 30 6 *'  # Jun 30
+    - cron: '0 0 28 9 *'  # Sep 28
+    - cron: '0 0 27 12 *' # Dec 27
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,35 +22,37 @@ concurrency:
 jobs:
   build:
     runs-on: macos-13
+
     steps:
-      - name: Checkout
+      - name: 📥 Checkout Source
         uses: actions/checkout@v3
 
-      - name: Install Procursus
+      - name: 🧰 Install Procursus
         uses: dhinakg/procursus-action@main
         with:
           packages: ldid findutils sed coreutils make
 
-      - name: Install THEOS (without SDKs)
+      - name: 🛠 Install THEOS (without SDKs)
         run: |
           set -x
           export BASEDIR="$(pwd)"
           export THEOS="${BASEDIR}/theos"
           mkdir -p $THEOS
           curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos >> install-theos.sh
+          # Patch install script to skip SDKs
           gsed -E "/^\s*get_theos\s*$/,+1 s/^(\s*)(get_sdks)\s*$/\1mkdir -p \${THEOS}\/sdks\n\1touch \${THEOS}\/sdks\/sdk\n\1\2/g" -i install-theos.sh
           bash install-theos.sh
           cd $BASEDIR
-     
-      - name: Build and Install trustcache
+
+      - name: 🔐 Build and Install trustcache
         run: |
           set -x
           git clone https://github.com/CRKatri/trustcache
           cd trustcache
           gmake -j$(sysctl -n hw.physicalcpu) OPENSSL=1
           sudo cp trustcache /opt/procursus/bin/
-          
-      - name: Set Environment Variables
+
+      - name: 🕒 Set Environment Variables
         run: |
           set -x
           T2=$(TZ=UTC-2 date +'%Y%m%d_%H%M%S')
@@ -64,7 +62,7 @@ jobs:
           echo "ctimestamp=${TS}" >> $GITHUB_ENV
           echo "shorthash=${SHASH}" >> $GITHUB_ENV
 
-      - name: Build
+      - name: ⚙️ Build Dopamine
         run: |
           set -x
           sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
@@ -74,17 +72,14 @@ jobs:
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_Latest.tipa
 
-      - name: Upload Latest Artifact
-        id: dopamine-latest-upload
+      - name: 📤 Upload Latest Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Dopamine_Latest
-          path: |
-            ${{ github.workspace }}/Dopamine/Dopamine_Latest.tipa
-      - name: Upload Hashed Artifact
-        id: dopamine-hashed-upload
+          path: Dopamine/Dopamine_Latest.tipa
+
+      - name: 📤 Upload Hashed Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Dopamine_${{ env.shorthash }}_${{ env.ctime }}
-          path: |
-            ${{ github.workspace }}/Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
+          path: Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
