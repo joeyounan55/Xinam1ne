@@ -35,18 +35,17 @@ jobs:
         with:
           packages: ldid findutils sed coreutils make
 
-      - name: Install System Dependencies and Fallback Choma
+      - name: Install System Dependencies
+        run: |
+          brew update
+          brew install choma || echo "choma not available via Homebrew"
+
+      - name: Clone choma (if not in Homebrew)
         run: |
           set -x
-          brew update
-          if ! brew install choma; then
-            echo "choma not available via Homebrew, cloning manually..."
-            git clone https://github.com/opa334/choma.git
-            echo "CHOMA_INCLUDE=${PWD}/choma/include" >> $GITHUB_ENV
-          else
-            CHOMA_PATH="$(brew --prefix)/include/choma"
-            echo "CHOMA_INCLUDE=${CHOMA_PATH}" >> $GITHUB_ENV
-          fi
+          git clone https://github.com/opa334/choma.git
+          export CHOMA_INCLUDE="$(pwd)/choma/include"
+          echo "CHOMA_INCLUDE=${CHOMA_INCLUDE}" >> $GITHUB_ENV
 
       - name: Install THEOS (without SDKs)
         run: |
@@ -70,22 +69,16 @@ jobs:
       - name: Set Environment Variables
         run: |
           set -x
-          T2=$(TZ=UTC-2 date +'%Y%m%d_%H%M%S')
-          TS=$(date -j -f "%Y%m%d_%H%M%S" "${T2}" +%s)
-          SHASH=$(git rev-parse --short HEAD)
-          echo "ctime=${T2}" >> $GITHUB_ENV
-          echo "ctimestamp=${TS}" >> $GITHUB_ENV
-          echo "shorthash=${SHASH}" >> $GITHUB_ENV
-
-      - name: Build
-        run: |
-          set -x
-          sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
           export BASEDIR="$(pwd)"
           export THEOS="${BASEDIR}/theos"
           export CFLAGS="-I${CHOMA_INCLUDE} -I/usr/include/xpc"
           export LDFLAGS="-framework XPC"
           chmod +x ./BaseBin/pack.sh
+
+      - name: Build
+        run: |
+          set -x
+          sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
           gmake -j$(sysctl -n hw.physicalcpu)
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_Latest.tipa
