@@ -28,7 +28,7 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Install Procursus
         uses: dhinakg/procursus-action@main
@@ -45,22 +45,7 @@ jobs:
           gsed -E "/^\s*get_theos\s*$/,+1 s/^(\s*)(get_sdks)\s*$/\1mkdir -p \${THEOS}\/sdks\n\1touch \${THEOS}\/sdks\/sdk\n\1\2/g" -i install-theos.sh
           bash install-theos.sh
           cd $BASEDIR
-
-      - name: Add placeholder pack.sh if missing
-        run: |
-          if [ ! -f BaseBin/pack.sh ]; then
-            echo "#!/bin/bash" > BaseBin/pack.sh
-            echo "echo 'Packing files... (placeholder)'" >> BaseBin/pack.sh
-          fi
-          chmod +x BaseBin/pack.sh
-
-      - name: Debug Repository (tree + BaseBin)
-        run: |
-          echo "=== Root Directory ==="
-          ls -alh
-          echo "=== BaseBin Directory ==="
-          ls -alh BaseBin || echo "BaseBin not found"
-
+     
       - name: Build and Install trustcache
         run: |
           set -x
@@ -68,7 +53,7 @@ jobs:
           cd trustcache
           gmake -j$(sysctl -n hw.physicalcpu) OPENSSL=1
           sudo cp trustcache /opt/procursus/bin/
-
+          
       - name: Set Environment Variables
         run: |
           set -x
@@ -94,11 +79,12 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: Dopamine_Latest
-          path: Dopamine/Dopamine_Latest.tipa
-
+          path: |
+            ${{ github.workspace }}/Dopamine/Dopamine_Latest.tipa
       - name: Upload Hashed Artifact
         id: dopamine-hashed-upload
         uses: actions/upload-artifact@main
         with:
           name: Dopamine_${{ env.shorthash }}_${{ env.ctime }}
-          path: Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
+          path: |
+            ${{ github.workspace }}/Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
