@@ -1,4 +1,4 @@
-name: "Dopamine: Build and Upload"
+name: "Dopamine: build and upload"
 
 on:
   push:
@@ -13,11 +13,11 @@ on:
       - ".gitignore"
   workflow_dispatch:
   schedule:
-    - cron: '0 0 1 1 *'    # Every year on January 1st at midnight UTC
-    - cron: '0 0 1 4 *'    # Every year on April 1st at midnight UTC
-    - cron: '0 0 30 6 *'   # Every year on June 30th at midnight UTC
-    - cron: '0 0 28 9 *'   # Every year on September 28th at midnight UTC
-    - cron: '0 0 27 12 *'  # Every year on December 27th at midnight UTC
+    - cron: '0 0 1 1 *'
+    - cron: '0 0 1 4 *'
+    - cron: '0 0 30 6 *'
+    - cron: '0 0 28 9 *'
+    - cron: '0 0 27 12 *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,31 +27,14 @@ jobs:
   build:
     runs-on: macos-13
     steps:
-      # Checkout the repository
-      - name: Checkout Repository
-        uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      # Install Procursus packages
       - name: Install Procursus
         uses: dhinakg/procursus-action@main
         with:
           packages: ldid findutils sed coreutils make
 
-      # Install system dependencies (Homebrew)
-      - name: Install System Dependencies
-        run: |
-          brew update
-          brew install choma || echo "choma not available via Homebrew"
-
-      # Clone choma repository if not installed via Homebrew
-      - name: Clone choma (if not available via Homebrew)
-        run: |
-          set -x
-          git clone https://github.com/opa334/choma.git
-          export CHOMA_INCLUDE="$(pwd)/choma/include"
-          echo "CHOMA_INCLUDE=${CHOMA_INCLUDE}" >> $GITHUB_ENV
-
-      # Install THEOS
       - name: Install THEOS (without SDKs)
         run: |
           set -x
@@ -62,48 +45,45 @@ jobs:
           gsed -E "/^\s*get_theos\s*$/,+1 s/^(\s*)(get_sdks)\s*$/\1mkdir -p \${THEOS}\/sdks\n\1touch \${THEOS}\/sdks\/sdk\n\1\2/g" -i install-theos.sh
           bash install-theos.sh
           cd $BASEDIR
-
-      # Build and install trustcache
-      - name: Build and Install Trustcache
+     
+      - name: Build and Install trustcache
         run: |
           set -x
           git clone https://github.com/CRKatri/trustcache
           cd trustcache
           gmake -j$(sysctl -n hw.physicalcpu) OPENSSL=1
           sudo cp trustcache /opt/procursus/bin/
-
-      # Set environment variables for the build
+          
       - name: Set Environment Variables
         run: |
           set -x
-          export BASEDIR="$(pwd)"
-          export THEOS="${BASEDIR}/theos"
-          export CFLAGS="-I${CHOMA_INCLUDE} -I/usr/include/xpc"
-          export LDFLAGS="-framework XPC"
-          chmod +x ./BaseBin/pack.sh
+          T2=$(TZ=UTC-2 date +'%Y%m%d_%H%M%S')
+          TS=$(date -j -f "%Y%m%d_%H%M%S" "${T2}" +%s)
+          SHASH=$(git rev-parse --short HEAD)
+          echo "ctime=${T2}" >> $GITHUB_ENV
+          echo "ctimestamp=${TS}" >> $GITHUB_ENV
+          echo "shorthash=${SHASH}" >> $GITHUB_ENV
 
-      # Build the project
-      - name: Build Dopamine
+      - name: Build
         run: |
           set -x
           sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
+          export BASEDIR="$(pwd)"
+          export THEOS="${BASEDIR}/theos"
           gmake -j$(sysctl -n hw.physicalcpu)
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_Latest.tipa
 
-      # Upload the latest artifact
       - name: Upload Latest Artifact
         id: dopamine-latest-upload
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: Dopamine_Latest
           path: |
             ${{ github.workspace }}/Dopamine/Dopamine_Latest.tipa
-
-      # Upload the hashed artifact
       - name: Upload Hashed Artifact
         id: dopamine-hashed-upload
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: Dopamine_${{ env.shorthash }}_${{ env.ctime }}
           path: |
