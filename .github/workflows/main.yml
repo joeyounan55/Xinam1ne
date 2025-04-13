@@ -29,7 +29,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@main
 
       # Install Procursus packages
       - name: Install Procursus
@@ -94,7 +94,7 @@ jobs:
       # Upload the latest artifact
       - name: Upload Latest Artifact
         id: dopamine-latest-upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@main
         with:
           name: Dopamine_Latest
           path: |
@@ -103,7 +103,7 @@ jobs:
       # Upload the hashed artifact
       - name: Upload Hashed Artifact
         id: dopamine-hashed-upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@main
         with:
           name: Dopamine_${{ env.shorthash }}_${{ env.ctime }}
           path: |
