@@ -70,6 +70,7 @@ jobs:
           sudo security import Exploits/fastPath/arm.pfx -k /Library/Keychains/System.keychain -P password -A
           export BASEDIR="$(pwd)"
           export THEOS="${BASEDIR}/theos"
+          chmod -R +x ./BaseBin/
           gmake -j$(sysctl -n hw.physicalcpu)
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_${{ env.shorthash }}_${{ env.ctime }}.tipa
           cp -a Dopamine/Dopamine.tipa Dopamine/Dopamine_Latest.tipa
@@ -81,6 +82,7 @@ jobs:
           name: Dopamine_Latest
           path: |
             ${{ github.workspace }}/Dopamine/Dopamine_Latest.tipa
+
       - name: Upload Hashed Artifact
         id: dopamine-hashed-upload
         uses: actions/upload-artifact@main
