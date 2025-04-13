@@ -46,6 +46,21 @@ jobs:
           bash install-theos.sh
           cd $BASEDIR
 
+      - name: Add placeholder pack.sh if missing
+        run: |
+          if [ ! -f BaseBin/pack.sh ]; then
+            echo "#!/bin/bash" > BaseBin/pack.sh
+            echo "echo 'Packing files... (placeholder)'" >> BaseBin/pack.sh
+          fi
+          chmod +x BaseBin/pack.sh
+
+      - name: Debug Repository (tree + BaseBin)
+        run: |
+          echo "=== Root Directory ==="
+          ls -alh
+          echo "=== BaseBin Directory ==="
+          ls -alh BaseBin || echo "BaseBin not found"
+
       - name: Build and Install trustcache
         run: |
           set -x
