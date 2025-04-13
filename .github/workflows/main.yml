@@ -28,7 +28,7 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Install Procursus
         uses: dhinakg/procursus-action@main
@@ -76,14 +76,14 @@ jobs:
 
       - name: Upload Latest Artifact
         id: dopamine-latest-upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: Dopamine_Latest
           path: |
             ${{ github.workspace }}/Dopamine/Dopamine_Latest.tipa
       - name: Upload Hashed Artifact
         id: dopamine-hashed-upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: Dopamine_${{ env.shorthash }}_${{ env.ctime }}
           path: |
