@@ -10,5 +10,10 @@ all:
 clean:
 	@./BaseBin/clean.sh
 
+test:
+	@echo "Checking shell script syntax..."
+	@find . -name '*.sh' -print0 | xargs -0 -n1 sh -n
+	@echo "All shell scripts parsed successfully."
+
 update: all
 	@./jbupdate.sh
