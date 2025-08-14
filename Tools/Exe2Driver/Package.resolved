@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "SwiftMachO",
-        "repositoryURL": "https://github.com/pinauten/SwiftMachO",
-        "state": {
-          "branch": "master",
-          "revision": "d433b349d7e69bb8fd5d18ea5cdbcd8b731ddf55",
-          "version": null
-        }
-      },
-      {
         "package": "SwiftUtils",
         "repositoryURL": "https://github.com/pinauten/SwiftUtils",
         "state": {

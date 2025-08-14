@@ -7,10 +7,13 @@
 //
 
 import Foundation
+#if canImport(Darwin)
 import Darwin
+#else
+import Glibc
+#endif
 import SwiftUtils
 import SwiftMachO
-import MachO
 
 func fail(_ msg: String, _ args: CVarArg...) -> Never {
     print(String(format: msg, arguments: args))
