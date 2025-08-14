@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if canImport(Darwin)
 import SwiftUtils
 import SwiftMachO
 
@@ -114,15 +115,15 @@ do {
     
     // Alignment, fill with zeros
     fat.append(Data(count: 0x4000 - fat.count))
-    
+
     // Append binaries
     fat.append(modify)
     fat.append(inject)
-    
+
     // Extra data comes right after the injected executable
     // No padding
     fat.append(extraData)
-    
+
     // Return that stuff
     if CommandLine.arguments[3] != "-" {
         try fat.write(to: URL(fileURLWithPath: CommandLine.arguments[3]))
@@ -136,3 +137,6 @@ do {
     print("An exception occurred: \(e)")
     exit(-1)
 }
+#else
+print("installHaxx is unavailable on this platform.")
+#endif
