@@ -12,3 +12,9 @@ clean:
 
 update: all
 	@./jbupdate.sh
+
+test:
+	@sh -n BaseBin/pack.sh
+	@sh -n jbupdate.sh
+	@tail -c 1 BaseBin/pack.sh | od -An -t o1 | grep -q '012' || { echo 'BaseBin/pack.sh: missing trailing newline'; exit 1; }
+	@tail -c 1 jbupdate.sh | od -An -t o1 | grep -q '012' || { echo 'jbupdate.sh: missing trailing newline'; exit 1; }
