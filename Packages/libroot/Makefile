@@ -1,7 +1,15 @@
 TARGET = libroot.dylib
 CC = clang
 
-CFLAGS = -I../../BaseBin/.include -Isrc -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64 -arch arm64e -miphoneos-version-min=15.0 -fobjc-arc -O2
+SYSROOT := $(shell xcrun --sdk iphoneos --show-sdk-path 2>/dev/null)
+ifeq ($(SYSROOT),)
+ifndef SDKROOT
+$(error SDKROOT is required)
+endif
+SYSROOT := $(SDKROOT)
+endif
+
+CFLAGS = -I../../BaseBin/.include -Isrc -isysroot $(SYSROOT) -arch arm64 -arch arm64e -miphoneos-version-min=15.0 -fobjc-arc -O2
 LDFLAGS = -dynamiclib -rpath /var/jb
 
 all: $(TARGET) sign
