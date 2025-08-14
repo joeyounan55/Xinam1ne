@@ -109,6 +109,8 @@
 "Bypassing PAC (%@)" = "Saltando PAC (%@)";
 "Bypassing PPL (%@)" = "Saltando PPL (%@)";
 
+"Delete_Bootstrap_Failed" = "Failed to delete bootstrap (rc=%d)";
+
 // Package Manager selection
 "Status_Title_Select_Package_Managers" = "Seleccione gestor(es) de paquetes";
 "Select_Package_Managers_Install_Message" = "Si no está seguro de cuál seleccionar, seleccione Sileo";

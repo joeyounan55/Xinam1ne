@@ -109,6 +109,8 @@
 "Bypassing PAC (%@)" = "PAC 우회 중 (%@)";
 "Bypassing PPL (%@)" = "PPL 우회 중 (%@)";
 
+"Delete_Bootstrap_Failed" = "Failed to delete bootstrap (rc=%d)";
+
 // Package Manager selection
 "Status_Title_Select_Package_Managers" = "패키지 매니저 선택";
 "Select_Package_Managers_Install_Message" = "어떤 것을 선택할지 모르겠다면 Sileo를 선택하세요.";
