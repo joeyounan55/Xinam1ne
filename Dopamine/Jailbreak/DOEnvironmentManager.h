@@ -64,6 +64,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSError *)prepareBootstrap;
 - (NSError *)finalizeBootstrap;
+/**
+ * Attempts to delete the existing bootstrap.
+ *
+ * @return An NSError describing the failure when the TrollStore action
+ *         fails or the bootstrap could not be deleted, otherwise nil.
+ */
 - (NSError *)deleteBootstrap;
 - (NSError *)reinstallPackageManagers;
 @end
