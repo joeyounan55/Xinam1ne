@@ -1,10 +1,18 @@
-CC = clang
+CC ?= clang
 
-CFLAGS = -I../.include -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=15.0 -Wno-deprecated-declarations -fno-stack-check -D_FORTIFY_SOURCE=0
+CFLAGS = -I../.include -miphoneos-version-min=15.0 -Wno-deprecated-declarations -fno-stack-check -D_FORTIFY_SOURCE=0
 LDFLAGS = -shared -Xlinker -add_split_seg_info
 FILES = $(wildcard src/*.c src/*.S ../libjailbreak/src/jbclient_mach.c)
 FILES_IOS15 = $(wildcard src/generated/ios15/*.c)
 FILES_IOS16 = $(wildcard src/generated/ios16/*.c)
+
+SDK_PATH := $(shell command -v xcrun >/dev/null 2>&1 && xcrun --sdk iphoneos --show-sdk-path)
+ifeq ($(SDK_PATH),)
+SDK_PATH := $(IOS_SDK_PATH)
+endif
+ifneq ($(SDK_PATH),)
+CFLAGS += -isysroot $(SDK_PATH)
+endif
 
 all: dyldhook_merge.arm64e.dylib dyldhook_merge.arm64e.iOS15.dylib dyldhook_merge.arm64.dylib dyldhook_merge.arm64.iOS15.dylib
 
