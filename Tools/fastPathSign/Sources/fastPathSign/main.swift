@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if canImport(Security)
 import Security
 import Security_Codesign
 
@@ -130,3 +131,6 @@ guard err == kOSReturnSuccess else {
     }
     exit(-1)
 }
+#else
+print("fastPathSign is unavailable on this platform.")
+#endif

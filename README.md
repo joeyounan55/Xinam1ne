@@ -13,6 +13,14 @@ Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask
 - Cypwn-oriented colors
 - A toggle to stay on stock Dopamine vs. Xinam1ne w/ symlinks
 
+### Running tests
+
+To run the available unit tests for submodules, execute:
+
+```sh
+make test
+```
+
 That's all folks!
 
 <img src="https://media.tenor.com/xvo8-YQ78P0AAAAC/porky-pig.gif)https://media.tenor.com/xvo8-YQ78P0AAAAC/porky-pig.gif" width="320" />
