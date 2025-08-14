@@ -23,6 +23,8 @@
 #import "DOExploitManager.h"
 #import "NSData+Hex.h"
 
+NSString *const DOEnvironmentErrorDomain = @"DOEnvironmentErrorDomain";
+
 int reboot3(uint64_t flags, ...);
 
 @implementation DOEnvironmentManager
@@ -390,7 +392,7 @@ int reboot3(uint64_t flags, ...);
         [self rebootUserspace];
         return nil;
     }
-    return [NSError errorWithDomain:@"Dopamine" code:result userInfo:nil];
+    return [NSError errorWithDomain:DOEnvironmentErrorDomain code:result userInfo:nil];
 }
 
 - (void)updateJailbreakFromTIPA:(NSString *)tipaPath
