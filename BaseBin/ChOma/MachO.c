@@ -11,6 +11,80 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 
+static size_t expected_load_command_size(uint32_t cmd, bool *exactMatch)
+{
+    if (exactMatch) *exactMatch = true;
+    switch (cmd) {
+        case LC_SEGMENT:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct segment_command);
+        case LC_SEGMENT_64:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct segment_command_64);
+        case LC_SYMTAB:
+            return sizeof(struct symtab_command);
+        case LC_DYSYMTAB:
+            return sizeof(struct dysymtab_command);
+        case LC_LOAD_DYLIB:
+        case LC_ID_DYLIB:
+        case LC_LOAD_WEAK_DYLIB:
+        case LC_REEXPORT_DYLIB:
+        case LC_LAZY_LOAD_DYLIB:
+        case LC_LOAD_UPWARD_DYLIB:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct dylib_command);
+        case LC_LOAD_DYLINKER:
+        case LC_ID_DYLINKER:
+        case LC_DYLD_ENVIRONMENT:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct dylinker_command);
+        case LC_THREAD:
+        case LC_UNIXTHREAD:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct thread_command);
+        case LC_ROUTINES:
+            return sizeof(struct routines_command);
+        case LC_ROUTINES_64:
+            return sizeof(struct routines_command_64);
+        case LC_UUID:
+            return sizeof(struct uuid_command);
+        case LC_RPATH:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct rpath_command);
+        case LC_CODE_SIGNATURE:
+        case LC_SEGMENT_SPLIT_INFO:
+        case LC_FUNCTION_STARTS:
+        case LC_DATA_IN_CODE:
+        case LC_DYLIB_CODE_SIGN_DRS:
+        case LC_LINKER_OPTIMIZATION_HINT:
+        case LC_DYLD_EXPORTS_TRIE:
+        case LC_DYLD_CHAINED_FIXUPS:
+            return sizeof(struct linkedit_data_command);
+        case LC_ENCRYPTION_INFO:
+            return sizeof(struct encryption_info_command);
+        case LC_ENCRYPTION_INFO_64:
+            return sizeof(struct encryption_info_command_64);
+        case LC_VERSION_MIN_MACOSX:
+        case LC_VERSION_MIN_IPHONEOS:
+        case LC_VERSION_MIN_WATCHOS:
+        case LC_VERSION_MIN_TVOS:
+            return sizeof(struct version_min_command);
+        case LC_MAIN:
+            return sizeof(struct entry_point_command);
+        case LC_SOURCE_VERSION:
+            return sizeof(struct source_version_command);
+        case LC_DYLD_INFO:
+        case LC_DYLD_INFO_ONLY:
+            return sizeof(struct dyld_info_command);
+        case LC_BUILD_VERSION:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct build_version_command);
+        default:
+            if (exactMatch) *exactMatch = false;
+            return sizeof(struct load_command);
+    }
+}
+
 int macho_read_at_offset(MachO *macho, uint64_t offset, size_t size, void *outBuf)
 {
     if (macho->containingCache) {
@@ -215,12 +289,20 @@ int macho_enumerate_load_commands(MachO *macho, void (^enumeratorBlock)(struct l
             printf("Ignoring unknown command: 0x%x.\n", loadCommand.cmd);
         }
         else {
-            // TODO: Check if cmdsize matches expected size for cmd
-            uint8_t cmd[loadCommand.cmdsize];
-            if (macho_read_at_offset(macho, offset, loadCommand.cmdsize, cmd) != 0) continue;
-            bool stop = false;
-            enumeratorBlock(loadCommand, offset, (void *)cmd, &stop);
-            if (stop) break;
+            bool exact = false;
+            size_t expected = expected_load_command_size(loadCommand.cmd, &exact);
+            if ((exact && loadCommand.cmdsize != expected) || (!exact && loadCommand.cmdsize < expected)) {
+                printf("Warning: load command %s has size %u (expected %s%zu). Skipping.\n",
+                       load_command_to_string(loadCommand.cmd), loadCommand.cmdsize,
+                       exact ? "" : "at least ", expected);
+            }
+            else {
+                uint8_t cmd[loadCommand.cmdsize];
+                if (macho_read_at_offset(macho, offset, loadCommand.cmdsize, cmd) != 0) continue;
+                bool stop = false;
+                enumeratorBlock(loadCommand, offset, (void *)cmd, &stop);
+                if (stop) break;
+            }
         }
         offset += loadCommand.cmdsize;
     }
