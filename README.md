@@ -6,6 +6,10 @@ Rootless arm64e jailbreak for iOS 15.0 - 15.4.1.
 
 Official website / download: https://xina.cypwn.xyz
 
+## Building
+
+The build system will use `xcrun` if available to locate Apple's SDK and toolchain. When `xcrun` is not installed, the Makefiles fall back to invoking `clang` directly and require the `SDKROOT` environment variable to point to an appropriate SDK path.
+
 ### Why Xinam1ne instead of Dopamine?
 
 Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask me what changes with Xinam1ne and I always have to type out the same old stuff, so have a list of what Xinam1ne has that Dopamine doesn't:
