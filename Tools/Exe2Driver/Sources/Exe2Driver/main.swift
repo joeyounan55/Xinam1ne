@@ -42,15 +42,15 @@ guard hdr.magic == MH_MAGIC_64 else {
 
 var foundBuildVersion = false, foundMain = false
 
-guard let ncmds = machO.tryGetGeneric(type: UInt32.self, offset: 0x10) else {
+guard let ncmds = machO.tryGetGeneric(type: UInt32.self, offset: 0x10).map(Int.init) else {
     fail("Bad file size!")
 }
 
-guard let cmds_size = machO.tryGetGeneric(type: UInt32.self, offset: 0x14) else {
+guard let cmds_size = machO.tryGetGeneric(type: UInt32.self, offset: 0x14).map(Int.init) else {
     fail("Bad file size!")
 }
 
-guard (cmds_size + 0x20) <= machO.count else {
+guard (Int(cmds_size) + 0x20) <= machO.count else {
     fail("Bad file size!")
 }
 
