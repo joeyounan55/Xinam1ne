@@ -47,7 +47,8 @@ static int buffered_stream_write(MemoryStream *stream, uint64_t offset, size_t s
     }
 
     if (needsExpand) {
-        buffered_stream_expand(stream, 0, (offset + size) - context->subBufferSize);
+        int r = buffered_stream_expand(stream, 0, (offset + size) - context->subBufferSize);
+        if (r != 0) return r;
     }
 
     memcpy(context->buffer + context->subBufferStart + offset, inBuf, size);
@@ -84,6 +85,9 @@ static int buffered_stream_expand(MemoryStream *stream, size_t expandAtStart, si
 
     size_t newSize = context->subBufferSize + expandAtStart + expandAtEnd;
     uint8_t *newBuffer = malloc(newSize);
+    if (!newBuffer) {
+        return -1;
+    }
     memset(newBuffer, 0, newSize);
     memcpy(&newBuffer[expandAtStart], &context->buffer[context->subBufferStart], context->subBufferSize);
     if (stream->flags & MEMORY_STREAM_FLAG_OWNS_DATA) {
