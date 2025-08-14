@@ -1,7 +1,17 @@
 TARGET = forkfix.dylib
 CC = clang
 
-CFLAGS = -I../.include -I./src -I../_external/modules/litehook/src -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64e -Wno-deprecated-declarations -miphoneos-version-min=15.0 -O2
+ifeq ($(SYSROOT),)
+SYSROOT := $(shell xcrun --sdk iphoneos --show-sdk-path 2>/dev/null)
+ifeq ($(SYSROOT),)
+ifndef SDKROOT
+$(error SDKROOT is required)
+endif
+SYSROOT := $(SDKROOT)
+endif
+endif
+
+CFLAGS = -I../.include -I./src -I../_external/modules/litehook/src -isysroot $(SYSROOT) -arch arm64e -Wno-deprecated-declarations -miphoneos-version-min=15.0 -O2
 LDFLAGS = ../systemhook/systemhook.dylib -dynamiclib
 
 sign: $(TARGET)
