@@ -16,3 +16,15 @@ Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask
 That's all folks!
 
 <img src="https://media.tenor.com/xvo8-YQ78P0AAAAC/porky-pig.gif)https://media.tenor.com/xvo8-YQ78P0AAAAC/porky-pig.gif" width="320" />
+
+## Building
+
+The default build process uses Apple's `xcrun` tool, which is provided by the Xcode command line tools. If `xcrun` is missing, `make` will exit with an error explaining that Xcode is required.
+
+You can attempt a cross-platform build by using system toolchains instead:
+
+```sh
+make USE_SYSTEM_TOOLS=1
+```
+
+This path relies on tools like `clang` being available on your system and may not support all features.
