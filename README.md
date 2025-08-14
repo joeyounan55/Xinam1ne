@@ -12,6 +12,10 @@ Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask
 - Xina-like symlinks for older rootful tweaks which are created upon jailbreaking (so DRM for said tweaks can load w/o issue in rare cases)
 - Cypwn-oriented colors
 - A toggle to stay on stock Dopamine vs. Xinam1ne w/ symlinks
+### Building
+
+Cross-platform builds require the vendored Darwin headers located in `BaseBin/_external/include` or an extracted macOS/iOS SDK.
+
 
 That's all folks!
 
