@@ -2,7 +2,47 @@
 #define MACHO_H
 
 #include <stdio.h>
+
+#ifdef __APPLE__
 #include <libkern/OSByteOrder.h>
+#else
+#include <endian.h>
+#include <byteswap.h>
+
+#define OSSwapInt16(x) __builtin_bswap16(x)
+#define OSSwapInt32(x) __builtin_bswap32(x)
+#define OSSwapInt64(x) __builtin_bswap64(x)
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define OSSwapHostToBigInt16(x) OSSwapInt16(x)
+#define OSSwapHostToBigInt32(x) OSSwapInt32(x)
+#define OSSwapHostToBigInt64(x) OSSwapInt64(x)
+#define OSSwapBigToHostInt16(x) OSSwapInt16(x)
+#define OSSwapBigToHostInt32(x) OSSwapInt32(x)
+#define OSSwapBigToHostInt64(x) OSSwapInt64(x)
+#define OSSwapHostToLittleInt16(x) (x)
+#define OSSwapHostToLittleInt32(x) (x)
+#define OSSwapHostToLittleInt64(x) (x)
+#define OSSwapLittleToHostInt16(x) (x)
+#define OSSwapLittleToHostInt32(x) (x)
+#define OSSwapLittleToHostInt64(x) (x)
+#else
+#define OSSwapHostToBigInt16(x) (x)
+#define OSSwapHostToBigInt32(x) (x)
+#define OSSwapHostToBigInt64(x) (x)
+#define OSSwapBigToHostInt16(x) (x)
+#define OSSwapBigToHostInt32(x) (x)
+#define OSSwapBigToHostInt64(x) (x)
+#define OSSwapHostToLittleInt16(x) OSSwapInt16(x)
+#define OSSwapHostToLittleInt32(x) OSSwapInt32(x)
+#define OSSwapHostToLittleInt64(x) OSSwapInt64(x)
+#define OSSwapLittleToHostInt16(x) OSSwapInt16(x)
+#define OSSwapLittleToHostInt32(x) OSSwapInt32(x)
+#define OSSwapLittleToHostInt64(x) OSSwapInt64(x)
+#endif
+
+#endif
+
 #include <mach/mach.h>
 #include <mach-o/loader.h>
 #include <mach-o/fat.h>
