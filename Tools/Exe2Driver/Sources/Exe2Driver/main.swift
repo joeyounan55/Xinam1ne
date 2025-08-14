@@ -7,6 +7,7 @@
 //
 
 import Foundation
+#if canImport(Darwin)
 import Darwin
 import SwiftUtils
 import SwiftMachO
@@ -104,3 +105,6 @@ do {
 
 print("Successfully patched executable!")
 print("Wrote driver to '\(CommandLine.arguments[2])'.")
+#else
+print("Exe2Driver is unavailable on this platform.")
+#endif
