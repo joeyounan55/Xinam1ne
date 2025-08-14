@@ -203,23 +203,41 @@ int macho_enumerate_load_commands(MachO *macho, void (^enumeratorBlock)(struct l
     }
 
     // First load command starts after mach header
-    uint64_t offset = macho_get_mach_header_size(macho);
+    uint64_t headerSize = macho_get_mach_header_size(macho);
+    uint64_t headerEnd = headerSize + macho->machHeader.sizeofcmds;
+    uint64_t offset = headerSize;
 
     for (int j = 0; j < macho->machHeader.ncmds; j++) {
         struct load_command loadCommand;
         if (macho_read_at_offset(macho, offset, sizeof(loadCommand), &loadCommand) != 0) continue;
         LOAD_COMMAND_APPLY_BYTE_ORDER(&loadCommand, LITTLE_TO_HOST_APPLIER);
 
+        uint64_t remaining = headerEnd > offset ? headerEnd - offset : 0;
+        if (loadCommand.cmdsize < sizeof(struct load_command) || loadCommand.cmdsize > remaining) {
+            printf("Error: invalid load command size (%u).\n", loadCommand.cmdsize);
+            offset += loadCommand.cmdsize;
+            continue;
+        }
+
         if (strcmp(load_command_to_string(loadCommand.cmd), "LC_UNKNOWN") == 0)
         {
             printf("Ignoring unknown command: 0x%x.\n", loadCommand.cmd);
         }
         else {
-            // TODO: Check if cmdsize matches expected size for cmd
-            uint8_t cmd[loadCommand.cmdsize];
-            if (macho_read_at_offset(macho, offset, loadCommand.cmdsize, cmd) != 0) continue;
+            uint8_t *cmd = malloc(loadCommand.cmdsize);
+            if (!cmd) {
+                printf("Error: failed to allocate %u bytes for load command.\n", loadCommand.cmdsize);
+                offset += loadCommand.cmdsize;
+                continue;
+            }
+            if (macho_read_at_offset(macho, offset, loadCommand.cmdsize, cmd) != 0) {
+                free(cmd);
+                offset += loadCommand.cmdsize;
+                continue;
+            }
             bool stop = false;
             enumeratorBlock(loadCommand, offset, (void *)cmd, &stop);
+            free(cmd);
             if (stop) break;
         }
         offset += loadCommand.cmdsize;
