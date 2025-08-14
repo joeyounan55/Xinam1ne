@@ -109,6 +109,8 @@
 "Bypassing PAC (%@)" = "正在绕过 PAC (%@)";
 "Bypassing PPL (%@)" = "正在绕过 PPL (%@)";
 
+"Delete_Bootstrap_Failed" = "Failed to delete bootstrap (rc=%d)";
+
 // Package Manager selection
 "Status_Title_Select_Package_Managers" = "请选择包管理器";
 "Select_Package_Managers_Install_Message" = "如果你不确定选择哪一个比较好，请选择 Sileo";

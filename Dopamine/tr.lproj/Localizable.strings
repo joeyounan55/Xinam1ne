@@ -107,6 +107,8 @@
 /*Bypassing PAC (%@)*/
 /*Bypassing PPL (%@)*/
 
+"Delete_Bootstrap_Failed" = "Failed to delete bootstrap (rc=%d)";
+
 // Package Manager selection
 "Status_Title_Select_Package_Managers" = "Paket Yöneticisi Seçin";
 "Select_Package_Managers_Install_Message" = "If you are unsure which one to select, select Sileo";
