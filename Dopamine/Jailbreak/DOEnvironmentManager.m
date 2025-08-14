@@ -639,7 +639,7 @@ int reboot3(uint64_t flags, ...);
     return [_bootstrapper finalizeBootstrap];
 }
 
-- (NSError *)deleteBootstrap
+- (NSError * _Nullable)deleteBootstrap
 {
     if (![self isJailbroken] && getuid() != 0) {
         int r = [self runTrollStoreAction:@"delete-bootstrap"];
