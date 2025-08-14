@@ -644,7 +644,7 @@ int reboot3(uint64_t flags, ...);
     if (![self isJailbroken] && getuid() != 0) {
         int r = [self runTrollStoreAction:@"delete-bootstrap"];
         if (r != 0) {
-            // TODO: maybe handle error
+            return [NSError errorWithDomain:@"Dopamine" code:r userInfo:nil];
         }
         return nil;
     }
