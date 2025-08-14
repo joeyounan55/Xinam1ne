@@ -9,11 +9,11 @@ cd "$PACK_DIR"
 TARGET="../Dopamine/Dopamine/bootstrap/basebin.tar"
 
 if [ -f "$TARGET" ]; then
-	rm -rf "$TARGET"
+	rm -f "$TARGET"
 fi
 
 if [ -f "basebin.tar" ]; then
-	rm -rf "basebin.tar"
+	rm -f "basebin.tar"
 fi
 
 if [ -d ".tmp/basebin" ]; then
