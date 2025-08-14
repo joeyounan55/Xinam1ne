@@ -1,7 +1,8 @@
 TARGET = systemhook.dylib
-CC = clang
+CC = $(TOOLCHAIN)
+SDK_PATH ?= $(shell xcrun --sdk iphoneos --show-sdk-path)
 
-CFLAGS = -I../.include -I./src -I../_external/modules/litehook/src -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64 -arch arm64e -miphoneos-version-min=15.0 -install_name @loader_path/$(TARGET) -Wno-deprecated-declarations -Os -moutline
+CFLAGS = -I../.include -I./src -I../_external/modules/litehook/src --sysroot $(SDK_PATH) -arch arm64 -arch arm64e -miphoneos-version-min=15.0 -install_name @loader_path/$(TARGET) -Wno-deprecated-declarations -Os -moutline
 LDFLAGS = -dynamiclib
 
 sign: $(TARGET)
