@@ -14,6 +14,8 @@ Run all build commands from the repository root. To preview the build steps with
 make -f Makefile -n all
 ```
 
+If the `Dopamine` component is missing or its Makefile hasn't been checked out, the build system will skip that step automatically.
+
 ### Why Xinam1ne instead of Dopamine?
 
 Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask me what changes with Xinam1ne and I always have to type out the same old stuff, so have a list of what Xinam1ne has that Dopamine doesn't:
