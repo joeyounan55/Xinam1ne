@@ -67,11 +67,21 @@ static uint8_t *buffered_stream_get_raw_pointer(MemoryStream *stream)
     return &context->buffer[context->subBufferStart];
 }
 
+/*
+ * Trims the current sub-buffer by removing bytes at the beginning and end.
+ *
+ * Returns 0 on success or -1 if the trim sizes exceed the current
+ * sub-buffer size. On failure the buffer remains unchanged.
+ */
 static int buffered_stream_trim(MemoryStream *stream, size_t trimAtStart, size_t trimAtEnd)
 {
     BufferedStreamContext *context = stream->context;
 
-    // TODO: bound checks
+    if (trimAtStart > context->subBufferSize || trimAtEnd > context->subBufferSize ||
+        (trimAtStart + trimAtEnd) > context->subBufferSize) {
+        return -1;
+    }
+
     context->subBufferStart += trimAtStart;
     context->subBufferSize -= (trimAtEnd + trimAtStart);
 
