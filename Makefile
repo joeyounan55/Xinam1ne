@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 all:
 	@./BaseBin/pack.sh
 	@xattr -rc Tools >/dev/null 2>&1

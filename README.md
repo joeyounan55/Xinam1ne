@@ -6,6 +6,14 @@ Rootless arm64e jailbreak for iOS 15.0 - 15.4.1.
 
 Official website / download: https://xina.cypwn.xyz
 
+## Building
+
+Run all build commands from the repository root. To preview the build steps without executing them, run:
+
+```sh
+make -f Makefile -n all
+```
+
 ### Why Xinam1ne instead of Dopamine?
 
 Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask me what changes with Xinam1ne and I always have to type out the same old stuff, so have a list of what Xinam1ne has that Dopamine doesn't:
