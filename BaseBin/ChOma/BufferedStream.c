@@ -71,7 +71,13 @@ static int buffered_stream_trim(MemoryStream *stream, size_t trimAtStart, size_t
 {
     BufferedStreamContext *context = stream->context;
 
-    // TODO: bound checks
+    if (trimAtStart > context->subBufferSize || trimAtEnd > context->subBufferSize ||
+        trimAtStart > context->subBufferSize - trimAtEnd) {
+        printf("Error: cannot trim %zx bytes at start and %zx bytes at end, maximum is %zx.\n",
+               trimAtStart, trimAtEnd, context->subBufferSize);
+        return -1;
+    }
+
     context->subBufferStart += trimAtStart;
     context->subBufferSize -= (trimAtEnd + trimAtStart);
 
