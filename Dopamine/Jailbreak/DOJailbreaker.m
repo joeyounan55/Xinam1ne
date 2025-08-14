@@ -530,7 +530,7 @@ void *boomerang_server(struct boomerang_info *info)
     if (removeJailbreakEnabled) {
         [[DOUIManager sharedInstance] sendLog:DOLocalizedString(@"Removing Jailbreak") debug:NO];
         *errOut = [[DOEnvironmentManager sharedManager] deleteBootstrap];
-        *didRemove = YES;
+        *didRemove = (*errOut == nil);
         return;
     }
     
