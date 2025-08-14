@@ -71,9 +71,21 @@ static int buffered_stream_trim(MemoryStream *stream, size_t trimAtStart, size_t
 {
     BufferedStreamContext *context = stream->context;
 
-    // TODO: bound checks
-    context->subBufferStart += trimAtStart;
-    context->subBufferSize -= (trimAtEnd + trimAtStart);
+    size_t totalTrim = trimAtStart + trimAtEnd;
+
+    if (totalTrim > context->subBufferSize) {
+        printf("Error: cannot trim %zx bytes, maximum is %zx.\n", totalTrim, context->subBufferSize);
+        return -1;
+    }
+
+    size_t newStart = (size_t)context->subBufferStart + trimAtStart;
+    if (newStart < context->subBufferStart) {
+        printf("Error: trimAtStart %zx causes subBufferStart underflow.\n", trimAtStart);
+        return -1;
+    }
+
+    context->subBufferStart = (uint32_t)newStart;
+    context->subBufferSize -= totalTrim;
 
     return 0;
 }
