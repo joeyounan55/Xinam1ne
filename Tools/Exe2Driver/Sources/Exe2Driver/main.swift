@@ -50,7 +50,7 @@ guard let cmds_size = machO.tryGetGeneric(type: UInt32.self, offset: 0x14).map(I
     fail("Bad file size!")
 }
 
-guard (Int(cmds_size) + 0x20) <= machO.count else {
+guard (cmds_size + 0x20) <= machO.count else {
     fail("Bad file size!")
 }
 
