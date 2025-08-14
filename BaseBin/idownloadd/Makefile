@@ -1,3 +1,4 @@
+# Requires Xcode's `xcrun` to be available or `SDKROOT` to be defined.
 XCODE_PROJECT = src/idownloadd.xcodeproj
 XCODE_SCHEME = idownloadd
 CS_FLAGS = CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO

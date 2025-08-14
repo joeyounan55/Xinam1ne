@@ -1,3 +1,4 @@
+# Requires Xcode's `xcrun` to be available or `SDKROOT` to be defined.
 TARGET := iphone:clang:latest:15.0
 INSTALL_TARGET_PROCESSES = lsd cfprefsd
 FINALPACKAGE = 1

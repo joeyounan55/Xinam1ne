@@ -1,7 +1,9 @@
+# Requires Xcode's `xcrun` to be available or `SDKROOT` to be defined.
+SDKROOT ?= $(shell xcrun --sdk iphoneos --show-sdk-path)
 TARGET = libkrw-dopamine.dylib
 CC = clang
 
-CFLAGS = -I../../BaseBin/.include -Isrc -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64 -arch arm64e -miphoneos-version-min=15.0 -fobjc-arc -O2
+CFLAGS = -I../../BaseBin/.include -Isrc -isysroot $(SDKROOT) -arch arm64 -arch arm64e -miphoneos-version-min=15.0 -fobjc-arc -O2
 LDFLAGS = -dynamiclib -rpath /var/jb/usr/lib -L../../BaseBin/.build -ljailbreak
 
 all: $(TARGET) sign
