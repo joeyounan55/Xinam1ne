@@ -16,3 +16,14 @@ Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask
 That's all folks!
 
 <img src="https://media.tenor.com/xvo8-YQ78P0AAAAC/porky-pig.gif)https://media.tenor.com/xvo8-YQ78P0AAAAC/porky-pig.gif" width="320" />
+
+## Building
+
+The build system defaults to `clang`. To use a different toolchain, override the `CC` variable:
+
+```
+make CC=gcc    # GNU toolchain
+make CC=cl     # MSVC toolchain
+```
+
+If `xcrun` is unavailable, set `IOS_SDK_PATH` (or `MACOS_SDK_PATH` for macOS targets) to the SDK location or rely on system headers.
