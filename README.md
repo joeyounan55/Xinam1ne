@@ -6,6 +6,26 @@ Rootless arm64e jailbreak for iOS 15.0 - 15.4.1.
 
 Official website / download: https://xina.cypwn.xyz
 
+## Building on Windows
+
+1. Install LLVM/Clang. The easiest way is via [winget](https://learn.microsoft.com/windows/package-manager/winget/):
+
+   ```powershell
+   winget install -e --id LLVM.LLVM
+   ```
+
+   Alternatively download the LLVM installer from [llvm.org](https://releases.llvm.org/).
+
+2. Obtain an Apple SDK and set the toolchain and SDK paths before invoking `make`:
+
+   ```powershell
+   set TOOLCHAIN=clang
+   set SDK_PATH=C:\path\to\iPhoneOS.sdk
+   make
+   ```
+
+   (Use `$env:VAR="value"` in PowerShell.)
+
 ### Why Xinam1ne instead of Dopamine?
 
 Honestly, do what you want. Dopamine works fine to some extent. A lot of you ask me what changes with Xinam1ne and I always have to type out the same old stuff, so have a list of what Xinam1ne has that Dopamine doesn't:
