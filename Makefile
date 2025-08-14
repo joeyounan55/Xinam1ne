@@ -8,7 +8,11 @@ all:
 	@echo "No target rule for $@"
 
 clean:
-	@./BaseBin/clean.sh
+	@if [ -x ./BaseBin/clean.sh ]; then \
+		./BaseBin/clean.sh; \
+	else \
+		echo "Warning: BaseBin/clean.sh not found"; \
+	fi
 
 update: all
 	@./jbupdate.sh
