@@ -1,6 +1,14 @@
 CC = clang
 
-CFLAGS = -I../.include -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=15.0 -Wno-deprecated-declarations -fno-stack-check -D_FORTIFY_SOURCE=0
+SYSROOT := $(shell xcrun --sdk iphoneos --show-sdk-path 2>/dev/null)
+ifeq ($(SYSROOT),)
+ifndef SDKROOT
+$(error SDKROOT is required)
+endif
+SYSROOT := $(SDKROOT)
+endif
+
+CFLAGS = -I../.include -isysroot $(SYSROOT) -miphoneos-version-min=15.0 -Wno-deprecated-declarations -fno-stack-check -D_FORTIFY_SOURCE=0
 LDFLAGS = -shared -Xlinker -add_split_seg_info
 FILES = $(wildcard src/*.c src/*.S ../libjailbreak/src/jbclient_mach.c)
 FILES_IOS15 = $(wildcard src/generated/ios15/*.c)
