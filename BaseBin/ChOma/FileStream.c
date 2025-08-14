@@ -1,7 +1,9 @@
 #include "FileStream.h"
 #include <sys/fcntl.h>
 #include <errno.h>
+#ifdef __APPLE__
 #include <os/log.h>
+#endif
 
 static int _file_stream_context_is_trimmed(FileStreamContext *context)
 {
@@ -35,8 +37,15 @@ static int file_stream_write(MemoryStream *stream, uint64_t offset, size_t size,
         sizeToExpand = (context->bufferStart + offset + size) - context->fileSize;
     }
 
-    // this is not supported for now: TODO fill with 0's then append the rest
-    if (context->bufferStart + offset > context->fileSize) return -1;
+    size_t gapLen = 0;
+    if (context->bufferStart + offset > context->fileSize) {
+        gapLen = (context->bufferStart + offset) - context->fileSize;
+        void *zeroBuf = calloc(1, gapLen);
+        if (!zeroBuf) return -1;
+        lseek(context->fd, context->fileSize, SEEK_SET);
+        write(context->fd, zeroBuf, gapLen);
+        free(zeroBuf);
+    }
 
     context->fileSize += sizeToExpand;
     context->bufferSize += sizeToExpand;
